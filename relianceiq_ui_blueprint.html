@@ -1,0 +1,1482 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RelianceIQ — UI Blueprint v3 (clickable, no backend)</title>
+<style>
+:root{
+  --g:#40826d; --g-dark:#2e6354; --g-deep:#1d4a3e; --g-soft:#e6f0ed; --g-softer:#f2f7f5;
+  --bg:#f5f7f6; --surface:#ffffff; --border:#e3e8e6; --border-2:#d3dcd8;
+  --ink:#1c332c; --ink-2:#496158; --ink-3:#7c8f89;
+  --amber:#b97d10; --amber-bg:#fdf4e3; --red:#b3423a; --red-bg:#fbeceb;
+  --blue:#2f6ea5; --blue-bg:#e9f1f8;
+  --r:10px; --sh:0 1px 2px rgba(28,51,44,.05),0 4px 14px rgba(28,51,44,.06);
+  --sh-lg:0 8px 40px rgba(28,51,44,.16);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select,textarea{font:inherit;color:inherit}
+::placeholder{color:var(--ink-3)}
+h1,h2,h3{font-weight:650}
+.btn{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:8px;font-weight:560;font-size:13.5px;border:1px solid transparent;transition:.15s;white-space:nowrap}
+.btn-p{background:var(--g);color:#fff}.btn-p:hover{background:var(--g-dark)}
+.btn-p:disabled{background:#a9c4bb;cursor:not-allowed}
+.btn-o{background:var(--surface);border-color:var(--border-2);color:var(--ink)}.btn-o:hover{border-color:var(--g);color:var(--g-dark)}
+.btn-ghost{color:var(--ink-2);padding:7px 10px;border-radius:8px}.btn-ghost:hover{background:var(--g-softer);color:var(--g-dark)}
+.btn-danger{color:var(--red)}.btn-danger:hover{background:var(--red-bg)}
+.btn-sm{padding:5px 10px;font-size:12.5px}
+.inp,.sel,.txa{width:100%;padding:9px 12px;border:1px solid var(--border-2);border-radius:8px;background:var(--surface);outline:none;transition:.15s}
+.inp:focus,.sel:focus,.txa:focus{border-color:var(--g);box-shadow:0 0 0 3px rgba(64,130,109,.15)}
+.inp:disabled,.sel:disabled{background:#f3f5f4;color:var(--ink-3)}
+.lbl{display:block;font-size:12.5px;font-weight:600;color:var(--ink-2);margin:14px 0 5px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh)}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;font-size:11.5px;font-weight:600}
+.chip-ok{background:var(--g-soft);color:var(--g-deep)}
+.chip-warn{background:var(--amber-bg);color:var(--amber)}
+.chip-bad{background:var(--red-bg);color:var(--red)}
+.chip-info{background:var(--blue-bg);color:var(--blue)}
+.chip-mut{background:#eef1f0;color:var(--ink-2)}
+.dot{width:7px;height:7px;border-radius:99px;display:inline-block}
+.muted{color:var(--ink-3);font-size:12.5px}
+.mono{font-variant-numeric:tabular-nums}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-3);font-weight:650;text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);background:#fafcfb;white-space:nowrap}
+td{padding:11px 14px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--g-softer)}
+.progress{height:6px;background:#e8edeb;border-radius:99px;overflow:hidden}
+.progress>i{display:block;height:100%;background:var(--g);border-radius:99px;transition:width .5s}
+.login{display:flex;min-height:100vh}
+.login-brand{flex:1;background:linear-gradient(160deg,var(--g-deep),var(--g-dark) 55%,var(--g));color:#fff;padding:56px;display:flex;flex-direction:column;justify-content:space-between}
+.login-brand h1{font-size:15px;letter-spacing:.34em;font-weight:700}
+.login-brand .big{font-size:32px;line-height:1.25;font-weight:650;max-width:440px}
+.login-brand p{opacity:.75;max-width:420px;margin-top:14px;line-height:1.6}
+.login-form{width:500px;background:var(--surface);display:flex;flex-direction:column;justify-content:center;padding:44px;overflow:auto;max-height:100vh}
+.persona{display:flex;align-items:center;gap:11px;width:100%;padding:9px 13px;border:1px solid var(--border);border-radius:10px;margin-top:7px;text-align:left;transition:.15s;background:var(--surface)}
+.persona:hover{border-color:var(--g);background:var(--g-softer)}
+.avatar{width:34px;height:34px;border-radius:99px;background:var(--g-soft);color:var(--g-deep);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex:none}
+.ctx-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:40px}
+.shell{display:flex;min-height:100vh}
+.side{width:226px;background:var(--surface);border-right:1px solid var(--border);padding:18px 12px;display:flex;flex-direction:column;gap:2px;position:sticky;top:0;height:100vh;overflow:auto}
+.side .logo{font-size:13px;font-weight:700;letter-spacing:.28em;color:var(--g-deep);padding:6px 10px 14px}
+.nav-i{display:flex;align-items:center;gap:10px;padding:8px 11px;border-radius:8px;color:var(--ink-2);font-weight:550;font-size:13.5px;width:100%;text-align:left}
+.nav-i:hover{background:var(--g-softer)}
+.nav-i.on{background:var(--g-soft);color:var(--g-deep)}
+.nav-sec{font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-3);padding:14px 11px 5px;font-weight:700}
+.main{flex:1;display:flex;flex-direction:column;min-width:0}
+.topbar{height:56px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;padding:0 22px;position:sticky;top:0;z-index:20}
+.ctx-badge{display:flex;align-items:center;gap:8px;background:var(--g-softer);border:1px solid var(--border);padding:5px 11px;border-radius:99px;font-size:12.5px;font-weight:600;color:var(--g-deep);white-space:nowrap}
+.credits-chip{display:flex;align-items:center;gap:7px;font-weight:650;font-size:13px;background:var(--g-soft);color:var(--g-deep);padding:6px 12px;border-radius:99px;white-space:nowrap}
+.bell{position:relative;padding:8px;border-radius:8px;font-size:16px}
+.bell:hover{background:var(--g-softer)}
+.bell .badge{position:absolute;top:2px;right:2px;background:var(--red);color:#fff;font-size:10px;font-weight:700;border-radius:99px;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center;padding:0 4px}
+.notif-panel{position:fixed;top:60px;right:18px;width:400px;max-height:70vh;overflow:auto;background:var(--surface);border:1px solid var(--border);border-radius:14px;box-shadow:var(--sh-lg);z-index:80}
+.notif-i{display:flex;gap:11px;padding:13px 16px;border-bottom:1px solid var(--border);align-items:flex-start}
+.notif-i:hover{background:var(--g-softer)}
+.notif-i.unread{background:#f4faf8}
+.notif-ic{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:14px;flex:none}
+.impersonate{background:var(--amber-bg);color:var(--amber);border-bottom:1px solid #ecd9ab;padding:8px 22px;font-size:12.5px;font-weight:600;display:flex;align-items:center;gap:10px}
+.content{padding:26px;max-width:1240px;width:100%;margin:0 auto}
+.page-h{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px}
+.page-h h2{font-size:20px}
+.page-h .sub{color:var(--ink-3);margin-top:3px;font-size:13px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:22px}
+.kpi{padding:16px 18px}
+.kpi .v{font-size:23px;font-weight:680;margin-top:5px}
+.kpi .l{font-size:12px;color:var(--ink-3);font-weight:600}
+.kpi .d{font-size:11.5px;margin-top:4px;color:var(--ink-3)}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.rowline{display:flex;justify-content:space-between;align-items:center;font-size:13px;padding:6px 0}
+.views{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:14px;flex-wrap:wrap}
+.view-t{padding:9px 14px;font-weight:580;font-size:13.5px;color:var(--ink-2);border-bottom:2px solid transparent;margin-bottom:-1px}
+.view-t.on{color:var(--g-deep);border-color:var(--g)}
+.toolbar{display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.toolbar .inp{width:250px}
+.selbar{background:var(--g-deep);color:#fff;border-radius:10px;padding:10px 16px;display:flex;align-items:center;gap:14px;margin-bottom:12px;box-shadow:var(--sh-lg)}
+.check{width:15px;height:15px;accent-color:var(--g)}
+.overlay{position:fixed;inset:0;background:rgba(20,35,30,.45);z-index:50;display:flex;align-items:center;justify-content:center}
+.modal{background:var(--surface);border-radius:14px;box-shadow:var(--sh-lg);width:580px;max-width:94vw;max-height:90vh;overflow:auto;padding:26px}
+.modal.wide{width:940px}
+.wiz-steps{display:flex;gap:0;margin:16px 0 20px}
+.wiz-step{flex:1;display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--ink-3);position:relative;padding-bottom:10px;border-bottom:3px solid #e8edeb}
+.wiz-step.on{color:var(--g-deep);border-color:var(--g)}
+.wiz-step.done{color:var(--g-dark);border-color:var(--g-soft)}
+.wiz-num{width:22px;height:22px;border-radius:99px;background:#e8edeb;color:var(--ink-3);display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;flex:none}
+.wiz-step.on .wiz-num{background:var(--g);color:#fff}
+.wiz-step.done .wiz-num{background:var(--g-soft);color:var(--g-deep)}
+.map-row td{padding:8px 12px}
+.samp{font-size:11.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.err-tbl td{font-size:12.5px;padding:7px 10px}
+.err-cell{color:var(--red);font-weight:600}
+/* spreadsheet mock */
+.sheet{border:1px solid #c9d3cf;border-radius:6px;overflow:auto;background:#fff;max-height:420px}
+.sheet table{border-collapse:collapse;font-size:12.5px;font-family:"SF Mono",Menlo,Consolas,monospace}
+.sheet th,.sheet td{border:1px solid #dfe6e3;padding:5px 8px;white-space:nowrap;text-align:left;background:#fff;font-weight:400}
+.sheet thead th{background:#eef2f0;color:var(--ink-2);font-weight:600;font-size:11px;text-transform:none;letter-spacing:0;position:sticky;top:0;z-index:2}
+.sheet .colhdr th{background:#e4eae7;color:var(--ink-3);font-size:10.5px;text-align:center;font-weight:600}
+.sheet .rn{background:#eef2f0;color:var(--ink-3);text-align:center;font-size:10.5px;width:34px;position:sticky;left:0}
+.sheet td[contenteditable]:focus{outline:2px solid var(--g);background:#f4faf8}
+.cell-bad{background:#fdeceb !important;box-shadow:inset 0 0 0 1px #e8b4b0}
+.cell-err{background:#fff6f5 !important;color:var(--red);font-weight:600;max-width:340px;white-space:normal}
+.sheet-tab{display:inline-flex;align-items:center;gap:6px;background:#fff;border:1px solid #c9d3cf;border-bottom:none;border-radius:6px 6px 0 0;padding:5px 14px;font-size:12px;font-weight:600;color:var(--ink-2)}
+.modal h3{font-size:17px;margin-bottom:2px}
+.modal .foot{display:flex;justify-content:flex-end;gap:10px;margin-top:24px}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:540px;max-width:94vw;background:var(--surface);box-shadow:var(--sh-lg);z-index:60;display:flex;flex-direction:column;border-left:1px solid var(--border)}
+.drawer .d-head{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.drawer .d-body{flex:1;overflow:auto;padding:18px 22px}
+.toasts{position:fixed;bottom:22px;right:22px;z-index:100;display:flex;flex-direction:column;gap:9px}
+.toast{background:var(--g-deep);color:#fff;padding:11px 16px;border-radius:10px;box-shadow:var(--sh-lg);font-size:13px;font-weight:550;max-width:340px;animation:pop .25s}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
+.vendor-row{border:1px solid var(--border);border-radius:10px;padding:13px 15px;margin-bottom:11px}
+.region-chip{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--border-2);border-radius:99px;padding:4px 11px;font-size:12.5px;margin:3px 4px 0 0;font-weight:550}
+.region-chip.on{background:var(--g-soft);border-color:var(--g);color:var(--g-deep)}
+.upload-zone{border:2px dashed var(--border-2);border-radius:12px;padding:30px;text-align:center;color:var(--ink-3);transition:.15s;cursor:pointer}
+.upload-zone:hover{border-color:var(--g);background:var(--g-softer)}
+.steps{display:flex;gap:6px;margin:4px 0 18px}
+.steps i{flex:1;height:4px;border-radius:99px;background:#e8edeb}.steps i.on{background:var(--g)}
+.runcard{padding:16px 18px;margin-bottom:12px}
+.empty{padding:56px;text-align:center;color:var(--ink-3)}
+.empty .big-ic{font-size:34px;margin-bottom:10px}
+.term-card{padding:20px;text-align:left;position:relative}
+.term-card.off{opacity:.55}
+.term-ic{width:38px;height:38px;border-radius:10px;background:var(--g-soft);color:var(--g-deep);display:flex;align-items:center;justify-content:center;font-size:17px;margin-bottom:12px}
+.chat{display:flex;height:calc(100vh - 200px);min-height:440px;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;background:var(--surface);box-shadow:var(--sh)}
+.chat-list{width:250px;border-right:1px solid var(--border);overflow:auto;background:#fafcfb}
+.chat-li{padding:13px 15px;border-bottom:1px solid var(--border);cursor:pointer}
+.chat-li:hover,.chat-li.on{background:var(--g-softer)}
+.chat-main{flex:1;display:flex;flex-direction:column}
+.chat-msgs{flex:1;overflow:auto;padding:20px;display:flex;flex-direction:column;gap:14px}
+.msg{max-width:78%;padding:11px 15px;border-radius:14px;font-size:13.5px;line-height:1.55}
+.msg.user{align-self:flex-end;background:var(--g);color:#fff;border-bottom-right-radius:4px}
+.msg.ai{align-self:flex-start;background:#f1f5f3;border-bottom-left-radius:4px}
+.chat-input{display:flex;gap:10px;padding:14px;border-top:1px solid var(--border)}
+.pricebar{display:flex;align-items:center;gap:8px}
+.pricebar i{height:8px;border-radius:99px;background:var(--g);display:inline-block}
+.set-wrap{display:flex;gap:22px;align-items:flex-start}
+.set-nav{width:210px;flex:none;position:sticky;top:82px}
+.set-nav .nav-i{font-size:13px;padding:7px 11px}
+.set-body{flex:1;min-width:0}
+.meta{font-size:11.5px;color:var(--ink-3)}
+kbd{background:#eef1f0;border-radius:5px;padding:1px 6px;font-size:11px}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="toasts" id="toasts"></div>
+<script>
+/* ============================================================================
+RelianceIQ UI BLUEPRINT v3 — unified session + permissions.
+Changes vs v2 (per product decisions):
+ • No role picker: everyone logs in → Dashboard. What you see is driven by
+   ACCESS TYPE (Org Admin / Sub Admin / Standard / Read-only) + permissions.
+ • Full Settings module: Profile, Company Account, Account & Billing, Usage,
+   Audit Log, Users, Imports & Exports, Subsidiaries (expanded wizard).
+ • System fields everywhere: created by / last modified by / last researched by.
+Personas: John (Org Admin) · Mike (Sub Admin) · Amit (Standard) · Leo (Read-only)
+          · Neha (Standard, no subsidiary) · Sara (RelianceIQ Ops)
+============================================================================ */
+
+/* ---------------- permissions ----------------
+   ROLE IS PER-MEMBERSHIP, NOT PER-USER.
+   A user can be Sub Admin in one subsidiary and Read-only in another.
+   Effective access = org role (if org_admin/riq_ops) else the role on the
+   membership row for the ACTIVE subsidiary.                               */
+const PERMS = {
+  org_admin:["read","part_create","part_edit","part_delete","report_edit","research","user_add","user_edit","user_delete","sub_create","sub_edit","sub_delete","billing"],
+  sub_admin:["read","part_create","part_edit","part_delete","report_edit","user_add","user_edit","user_delete","sub_edit"],   // no research (consumes credits), no create/delete sub
+  standard:["read","part_create","part_edit","part_delete","report_edit","research"],
+  readonly:["read"],
+  riq_ops:["read"],
+};
+function accessOf(u,subId){
+  if(!u)return null;
+  if(u.orgRole==="org_admin")return "org_admin";
+  if(u.orgRole==="riq_ops")return "riq_ops";
+  return (u.subRoles||{})[subId]||null;              // null = not a member of that sub
+}
+function userSubs(u){return u.orgRole==="org_admin"?Object.keys(SUBS):Object.keys(u.subRoles||{});}
+function myAccess(){return accessOf(S.user,S.sub);}
+function can(p,subId){const a=accessOf(S.user,subId===undefined?S.sub:subId);return !!a&&PERMS[a].includes(p);}
+function canSub(p,subId){return can(p,subId);}
+
+/* ---------------- mock data ---------------- */
+let COMPANY = { accountName:"AGCO", tz:"America/New_York (ET)", fiscal:"January – December",
+  companyName:"AGCO Corporation", domain:"agco.com", address:"4205 River Green Pkwy", city:"Duluth",
+  state:"GA", zip:"30096", country:"United States", industry:"Agricultural Machinery" };
+const USERS = {
+  john:{ id:"john", name:"John Carter", email:"john.carter@agco.com", orgRole:"org_admin", subRoles:{usa:"sub_admin"}, invite:"Accepted", created:"12 Jan 2026", last:"Just now" },
+  mike:{ id:"mike", name:"Mike Ross",   email:"mike.ross@agco.com",   orgRole:"member", subRoles:{usa:"sub_admin"}, invite:"Accepted", created:"02 Mar 2026", last:"Today" },
+  amit:{ id:"amit", name:"Amit Shah",   email:"amit.shah@agco.com",   orgRole:"member", subRoles:{usa:"standard"}, invite:"Accepted", created:"05 Mar 2026", last:"Today" },
+  /* Priya is the multi-role case: Sub Admin in North America, Read-only in Europe */
+  priya:{id:"priya",name:"Priya Nair",  email:"priya.nair@agco.com",  orgRole:"member", subRoles:{usa:"sub_admin", eu:"readonly"}, invite:"Accepted", created:"05 Mar 2026", last:"Yesterday" },
+  jack:{ id:"jack", name:"Jack Miller", email:"jack.miller@agco.com", orgRole:"member", subRoles:{eu:"sub_admin"}, invite:"Accepted", created:"11 Apr 2026", last:"2d ago" },
+  leo:{  id:"leo",  name:"Leo Grant",   email:"leo.grant@agco.com",   orgRole:"member", subRoles:{usa:"readonly"}, invite:"Accepted", created:"20 Jun 2026", last:"3d ago" },
+  neha:{ id:"neha", name:"Neha Rao",    email:"neha.rao@agco.com",    orgRole:"member", subRoles:{}, invite:"Accepted", created:"18 Jul 2026", last:"1w ago" },
+  kai:{  id:"kai",  name:"Kai Tanaka",  email:"k.tanaka@agco.com",    orgRole:"member", subRoles:{usa:"standard"}, invite:"Invited",  created:"28 Jul 2026", last:"—" },
+  sara:{ id:"sara", name:"Sara Kim",    email:"sara@relianceiq.ai",   orgRole:"riq_ops", subRoles:{}, invite:"Accepted", created:"—", last:"—" },
+};
+const ACCESS_LABEL={org_admin:"Org Admin",sub_admin:"Sub Admin",standard:"Standard User",readonly:"Read-only",riq_ops:"RelianceIQ Ops",member:"Member"};
+const PEOPLE = Object.fromEntries(Object.values(USERS).map(u=>[u.id,u.name]));
+let SUBS = {
+  usa:{ id:"usa", name:"North America Aftermarket", fn:"Parts Research", head:"mike", industry:"Agricultural Machinery",
+        city:"Duluth", state:"GA", zip:"30096", continent:"North America", countries:["United States"],
+        currency:"USD", tz:"America/New_York (ET)", sharing:true, desc:"US & Canada aftermarket competitive research",
+        members:["mike","amit","priya","leo","kai"], created:"Mar 2026" },
+  eu:{  id:"eu", name:"Europe Aftermarket", fn:"Parts Research", head:"jack", industry:"Agricultural Machinery",
+        city:"Neuhausen", state:"—", zip:"8212", continent:"Europe", countries:["Germany","France","Switzerland"],
+        currency:"EUR", tz:"Europe/Berlin (CET)", sharing:true, desc:"DACH + France vendor discovery",
+        members:["jack","priya"], created:"Apr 2026" },
+};
+let LOTS = [
+  { id:"L-1041", credits:10000, purchased:"12 Jan 2026", expires:"12 Jul 2027", remaining:6150, invoice:"INV-2026-0112" },
+  { id:"L-1057", credits:5000,  purchased:"03 Jun 2026", expires:"03 Dec 2027", remaining:5000, invoice:"INV-2026-0603" },
+];
+let BAL = { org:3400, subs:{usa:900, eu:450}, members:{ "john:usa":50, "amit:usa":120, "priya:usa":85, "priya:eu":30, "mike:usa":40, "jack:eu":60 } };
+let USAGE = { usa:{alloc:3600, used:2700}, eu:{alloc:1100, used:650} };
+let LEDGER = [
+  { t:"Purchase", who:"RelianceIQ", detail:"Lot L-1057 · 5,000 credits", amt:"+5,000", when:"03 Jun 2026" },
+  { t:"Allocate", who:"John Carter", detail:"Org → North America Aftermarket", amt:"−600", when:"28 Jun 2026" },
+  { t:"Allocate", who:"Mike Ross", detail:"NA purse → Amit Shah", amt:"−150", when:"30 Jun 2026" },
+  { t:"Consume", who:"Priya Nair", detail:"Search · 24 parts · RUN-0207", amt:"−24", when:"Yesterday" },
+  { t:"Refund",   who:"System", detail:"Zero-result search · PRT-2231 (Priya)", amt:"+1.5", when:"Yesterday" },
+];
+const CONTINENTS = {
+  "North America":["United States","Canada","Mexico"],
+  "Europe":["Germany","France","Switzerland","Italy","Spain","Netherlands","Poland","United Kingdom"],
+  "Asia":["Japan","India","South Korea","China","Vietnam"],
+  "South America":["Brazil","Argentina","Chile"],
+};
+let PARTS = [
+  p("PRT-1001","AL-110342","Hydraulic Gear Pump","Casappa","PLP20.8D0-82E2",4,3,"done","2d ago","priya","mike","priya"),
+  p("PRT-1002","AL-110377","Cabin Air Filter","Donaldson","P608668",6,6,"done","2d ago","priya","priya","priya"),
+  p("PRT-1003","AL-110392","Drive Belt 8PK1435","Gates","8PK1435",3,2,"done","6d ago","amit","amit","amit"),
+  p("PRT-1004","AL-110415","Ball Bearing 6207-2RS","SKF","6207-2RS1",8,7,"done","6d ago","amit","mike","amit"),
+  p("PRT-1005","AL-110433","Fuel Injector Nozzle","Bosch","0445120231",0,0,"zero","6d ago","amit","amit","amit"),
+  p("PRT-1006","AL-110447","Alternator 24V 80A","Mahle","MG597",2,0,"noprice","9d ago","priya","priya","priya"),
+  p("PRT-1007","AL-110455","Radiator Assembly","Nissens","67230",0,0,"new","—","amit",null,null),
+  p("PRT-1008","AL-110468","Turbocharger GT2556S","Garrett","711736-5026S",0,0,"new","—","amit",null,null),
+  p("PRT-1009","AL-110471","Clutch Kit 350mm","LuK","635 3049 00",0,0,"new","—","priya",null,null),
+  p("PRT-1010","AL-110489","Hydraulic Cylinder Seal Kit","Hercules","SK-4785-C",0,0,"new","—","priya",null,null),
+  p("PRT-1011","AL-110502","Water Pump w/ Pulley","Dayco","DP1439",0,0,"new","—","amit",null,null),
+  p("PRT-1012","AL-110518","Starter Motor 12V","Denso","428000-7110",0,0,"new","—","amit",null,null),
+];
+function p(id,internal,name,mfr,mfrNum,v,vp,st,last,cby,mby,rby){return {id,internal,name,mfr,mfrNum,vendors:v,withPrice:vp,status:st,last,progress:0,accepted:st==="done"?Math.max(1,vp-1):0,createdBy:cby,modBy:mby||cby,resBy:rby};}
+/* parts are HARD-SCOPED to a subsidiary — cross-subsidiary visibility does not exist */
+PARTS.forEach(x=>x.sub="usa");
+PARTS.push(
+  Object.assign(p("PRT-2001","EU-220145","Hydraulic Hose 2SN DN12","Parker","2SN12EU40",3,2,"done","3d ago","jack","jack","jack"),{sub:"eu"}),
+  Object.assign(p("PRT-2002","EU-220167","PTO Shaft Cross Journal","Walterscheid","8004-1310",0,0,"new","—","priya",null,null),{sub:"eu"}),
+  Object.assign(p("PRT-2003","EU-220189","Brake Disc 340 mm","ZF","0501-213-340",0,0,"new","—","priya",null,null),{sub:"eu"}),
+  Object.assign(p("PRT-2004","EU-220201","Fuel Filter Insert","MANN-Filter","PU 941/1 x",2,2,"done","1w ago","jack","jack","jack"),{sub:"eu"})
+);
+let VENDORS = {
+  "PRT-1001":[ven("Motion Industries","$412.50",412.5,"5 days","In stock","search",.96,"accepted"),
+              ven("Aftfasteners","$389.00",389,"7–10 days","In stock","search",.91,"accepted"),
+              ven("Accu-components","$438.20",438.2,"3 days","Low stock","search",.88,"pending"),
+              ven("HydraulicsDirect via Amazon","$455.00",455,"2 days","In stock","search",.62,"pending")],
+  "PRT-1006":[ven("AgriPartsEU","—",0,"—","Unknown","search",.74,"pending"),
+              ven("TruckElectrics","—",0,"12 days","Backorder","search",.81,"pending")],
+  "PRT-2001":[ven("Kramp","€38.90",38.9,"2 days","In stock","search",.94,"accepted"),
+              ven("GRANIT PARTS","€41.20",41.2,"4 days","In stock","search",.9,"pending"),
+              ven("Prillinger","€36.50",36.5,"6 days","Low stock","search",.87,"pending")],
+  "PRT-2004":[ven("Kramp","€12.40",12.4,"2 days","In stock","search",.95,"accepted"),
+              ven("Agrolager","€11.80",11.8,"5 days","In stock","search",.82,"pending")],
+};
+function ven(name,price,pnum,lead,stock,source,conf,status){return {name,price,pnum,lead,stock,source,conf,status};}
+let RUNS = [
+  { id:"RUN-0207", by:"priya", sub:"usa", type:"Selected", total:24, done:24, zero:2, failed:0, credits:24, refunded:1.5, status:"completed", when:"Yesterday 16:42" },
+  { id:"RUN-0203", by:"jack", sub:"eu", type:"Selected", total:9, done:9, zero:1, failed:0, credits:9, refunded:0.75, status:"completed", when:"3d ago" },
+];
+let UPLOADS = [
+  { id:"UP-0031", file:"agco_parts_batch_06.xlsx", by:"priya", sub:"usa", rows:1240, added:1197, dupes:31, errors:12, status:"completed", when:"12 Jul 2026" },
+  { id:"UP-0030", file:"agco_hydraulics_q2.csv", by:"amit", sub:"usa", rows:210, added:210, dupes:0, errors:0, status:"completed", when:"28 Jun 2026" },
+  { id:"UP-0028", file:"agco_eu_dach_parts.xlsx", by:"jack", sub:"eu", rows:96, added:94, dupes:2, errors:0, status:"completed", when:"15 Jul 2026" },
+];
+let EXPORTS = [
+  { id:"EXP-0114", what:"Vendor export (.xlsx)", scope:"All parts · North America", by:"amit", when:"22 Jul 2026" },
+];
+let CONVOS = [
+  { id:"c1", sub:"usa", title:"Alternatives for Bosch 0445120231", when:"2d ago", msgs:[
+    {who:"user", txt:"Find vendors for Bosch fuel injector 0445120231 in the US — regular search found nothing."},
+    {who:"ai", txt:"I found 2 likely suppliers:<br><br><b>1. DieselOps Inc.</b> — remanufactured, $148.00, 4-day lead, Chicago IL.<br><b>2. InjectorsUS</b> — OEM-equivalent, $189.50, in stock.<br><br>Both verified against the part number. Want me to add either as a vendor?"}]},
+];
+let AUTOSEARCH = { onUpload:false, monthly:true };
+let NOTIFS = {
+  amit:[ n("credit_alloc","150 credits allocated to you","Mike Ross allocated 150 credits · North America Aftermarket","30 Jun",true) ],
+  mike:[ n("review_req","23 vendors awaiting review","New search results in North America Aftermarket need accept/reject","Yesterday",false),
+         n("upload_done","Priya's upload finished","agco_parts_batch_06.xlsx · 1,197 added · 12 error rows","12 Jul",true) ],
+  john:[ n("lot_expiry","Credit lot expiring in 11 months","Lot L-1041 · 6,150 credits remaining · expires 12 Jul 2027","1 Jul",false) ],
+  sara:[ n("review_req","AGCO: 23 parts ready for cleaning","Rough-Diamond queue · North America Aftermarket","Yesterday",false),
+         n("approval","New signup pending approval","kwatanabe@kubota.com requested access","2d ago",false) ],
+  leo:[], neha:[], priya:[], jack:[], kai:[],
+};
+function n(type,title,body,when,read){return {type,title,body,when,read};}
+let NPREFS = { run_done:{app:true,email:true}, run_zero:{app:true,email:false}, upload_done:{app:true,email:true},
+  credit_alloc:{app:true,email:true}, lot_expiry:{app:true,email:true}, review_req:{app:true,email:false}, report_ready:{app:true,email:true} };
+const NICON = { run_done:["✓","var(--g-soft)","var(--g-deep)"], run_zero:["∅","var(--amber-bg)","var(--amber)"],
+  upload_done:["↥","var(--blue-bg)","var(--blue)"], credit_alloc:["◍","var(--g-soft)","var(--g-deep)"],
+  lot_expiry:["⏱","var(--amber-bg)","var(--amber)"], review_req:["☑","var(--blue-bg)","var(--blue)"],
+  report_ready:["▤","var(--g-soft)","var(--g-deep)"], approval:["⚇","var(--amber-bg)","var(--amber)"] };
+let CUSTOMERS = [
+  { org:"AGCO Corporation", plan:"Enterprise", subs:2, users:8, credits:15000, used:3926, status:"active" },
+  { org:"Kubota North America", plan:"Pilot", subs:1, users:2, credits:500, used:112, status:"active" },
+  { org:"Bobcat Company", plan:"—", subs:0, users:0, credits:0, used:0, status:"prospect" },
+];
+let PENDING = [
+  { name:"Ken Watanabe", email:"kwatanabe@kubota.com", org:"Kubota North America", when:"2d ago" },
+  { name:"Lisa Örn", email:"lisa.orn@volvo.com", org:"Volvo CE (new)", when:"5d ago" },
+];
+let CLEANQ = [
+  { org:"AGCO", sub:"North America", part:"PRT-1001", name:"Hydraulic Gear Pump", pending:2, run:"RUN-0207" },
+  { org:"AGCO", sub:"North America", part:"PRT-1006", name:"Alternator 24V 80A", pending:2, run:"RUN-0206" },
+  { org:"Kubota", sub:"US Dealers", part:"KBT-0223", name:"PTO Clutch Assembly", pending:5, run:"RUN-0199" },
+];
+let AUDIT = [
+  ["Just now","John Carter","Org Admin","credits.allocate","North America purse"],
+  ["Yesterday","Mike Ross","Sub Admin","member.credit.allocate","Amit Shah"],
+  ["Yesterday","System","—","credits.refund","RUN-0207 · 1.5 credits"],
+  ["12 Jul","Priya Nair","Standard","upload.create","agco_parts_batch_06.xlsx"],
+  ["1 Jul","Sara Kim","RIQ Ops ⚠","org.view (impersonated)","AGCO Corporation"],
+];
+
+/* ---------------- state ---------------- */
+let S = { user:null, sub:null, screen:"dash", set:"profile", view:"all", q:"", selected:new Set(),
+          modal:null, drawer:null, notifOpen:false, convo:"c1", impersonating:null, signupStage:null };
+
+/* ---------------- helpers ---------------- */
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt=nn=>Number(nn).toLocaleString("en-US",{maximumFractionDigits:2});
+function toast(msg){const t=document.createElement("div");t.className="toast";t.innerHTML=msg;$("toasts").appendChild(t);setTimeout(()=>t.remove(),4200);}
+function stub(name){toast("🔧 <b>"+name+"</b> — stub; behavior defined in the API map");}
+function memberBal(){return BAL.members[S.user.id+":"+S.sub] ?? 0;}
+function myNotifs(){return NOTIFS[S.user.id]||[];}
+function unread(){return myNotifs().filter(x=>!x.read).length;}
+function pushNotif(uid,type,title,body){(NOTIFS[uid]=NOTIFS[uid]||[]).unshift(n(type,title,body,"Just now",false));
+  if(S.user&&uid===S.user.id){ if(NPREFS[type]?.email) toast("📧 Email sent: "+title); renderBell(); }}
+function renderBell(){const b=$("bellBtn");if(b)b.outerHTML=bellHtml();}
+function bellHtml(){const u=unread();return `<button class="bell" id="bellBtn" onclick="S.notifOpen=!S.notifOpen;render()">🔔${u?`<span class="badge">${u}</span>`:""}</button>`;}
+function av(name){return (name||"?").split(" ").map(x=>x[0]).join("");}
+function metaLine(pt){return `<span class="meta">Created by <b>${PEOPLE[pt.createdBy]||"—"}</b> · Last modified by <b>${PEOPLE[pt.modBy]||"—"}</b> · Last researched by <b>${PEOPLE[pt.resBy]||"—"}</b></span>`;}
+
+/* ---------------- root ---------------- */
+function render(){
+  if(S.signupStage){$("app").innerHTML=signupScreen();return;}
+  if(!S.user){$("app").innerHTML=loginScreen();return;}
+  $("app").innerHTML=shell();
+}
+
+/* ---------------- login & signup ---------------- */
+function loginScreen(){return `
+<div class="login">
+  <div class="login-brand">
+    <h1>RELIANCEIQ</h1>
+    <div><div class="big">Real-time aftermarket parts intelligence, at portfolio scale.</div>
+    <p>Research market competition, discover vendors, and price with confidence — org-wide, region by region, powered by MarketIQ.</p></div>
+    <div style="opacity:.55;font-size:12.5px">© RIQ Corporation 2026 · relianceiq.ai</div>
+  </div>
+  <div class="login-form">
+    <h2 style="font-size:22px">Sign in</h2>
+    <label class="lbl">Email</label><input class="inp" value="john.carter@agco.com">
+    <label class="lbl">Password</label><input class="inp" type="password" value="••••••••••">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+      <span class="muted"><a href="#" onclick="event.preventDefault();stub('Forgot password')">Forgot password?</a></span>
+      <span class="muted">New here? <a href="#" onclick="event.preventDefault();S.signupStage='form';render()">Create account</a></span>
+    </div>
+    <button class="btn btn-p" style="width:100%;justify-content:center;margin-top:14px" onclick="login('john')">Sign in</button>
+    <div style="margin-top:18px;border-top:1px solid var(--border);padding-top:12px">
+      <div class="muted" style="font-weight:650;font-size:11px;text-transform:uppercase;letter-spacing:.04em">Prototype — sign in as</div>
+      ${["john","mike","amit","priya","leo","neha"].map(u=>`
+      <button class="persona" onclick="login('${u}')">
+        <span class="avatar">${av(USERS[u].name)}</span>
+        <span><b>${USERS[u].name}</b><br><span class="muted">${USERS[u].orgRole==="org_admin"?"Org Admin · all subsidiaries":
+          Object.keys(USERS[u].subRoles).length
+            ? Object.entries(USERS[u].subRoles).map(([sid,r])=>SUBS[sid].name.replace(" Aftermarket","")+": "+ACCESS_LABEL[r]).join(" · ")
+            : "Member · no subsidiary yet"}</span></span>
+      </button>`).join("")}
+      <div class="muted" style="font-weight:650;font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-top:12px">RelianceIQ internal</div>
+      <button class="persona" onclick="login('sara')">
+        <span class="avatar" style="background:var(--amber-bg);color:var(--amber)">SK</span>
+        <span><b>Sara Kim</b><br><span class="muted">RelianceIQ Ops — customers, approvals, cleaning queue</span></span>
+      </button>
+    </div>
+  </div>
+</div>`;}
+function signupScreen(){
+  if(S.signupStage==="pending")return `
+<div class="ctx-wrap"><div class="card" style="padding:40px;max-width:460px;text-align:center">
+  <div style="font-size:34px;margin-bottom:12px">⏳</div><h2>Account pending approval</h2>
+  <p class="muted" style="margin-top:10px;line-height:1.6">Your request is with the RelianceIQ team. You'll get an email once approved. Invited users skip this queue.</p>
+  <button class="btn btn-o" style="margin-top:20px" onclick="S.signupStage=null;render()">← Back to sign in</button>
+</div></div>`;
+  return `
+<div class="ctx-wrap"><div class="card" style="padding:34px;width:440px">
+  <h2>Create account</h2><div class="muted" style="margin-top:4px">Joining an existing org? Ask your admin for an invite instead.</div>
+  <label class="lbl">Full name</label><input class="inp" placeholder="Jane Doe">
+  <label class="lbl">Work email</label><input class="inp" placeholder="you@company.com">
+  <label class="lbl">Company</label><input class="inp" placeholder="Company name">
+  <label class="lbl">Password</label><input class="inp" type="password">
+  <button class="btn btn-p" style="width:100%;justify-content:center;margin-top:18px" onclick="S.signupStage='pending';render()">Request access</button>
+  <button class="btn-ghost" style="width:100%;justify-content:center;margin-top:8px" onclick="S.signupStage=null;render()">Cancel</button>
+</div></div>`;}
+function login(uid){S.user=USERS[uid];S.notifOpen=false;S.impersonating=null;S.selected=new Set();
+  S.sub = userSubs(S.user)[0] || null;
+  S.screen = S.user.orgRole==="riq_ops" ? "customers" : "dash"; S.set="profile"; render();}
+function workSubs(){return userSubs(S.user);}
+
+/* ---------------- shell & nav ---------------- */
+function nav(){
+  const mk=items=>items.map(x=>x.sec?`<div class="nav-sec">${x.sec}</div>`:
+    `<button class="nav-i ${S.screen===x.k?"on":""}" onclick="go('${x.k}')"><span>${x.ic}</span>${x.l}</button>`).join("");
+  if(S.user.orgRole==="riq_ops"&&!S.impersonating)
+    return mk([{sec:"CUSTOMERS"},{k:"customers",ic:"◫",l:"Customers"},{k:"approvals",ic:"⚇",l:"Approvals"},
+      {sec:"OPERATIONS"},{k:"cleanq",ic:"☑",l:"Cleaning queue"},{k:"runsMon",ic:"↻",l:"Runs monitor"}]);
+  return mk([{sec:"WORKSPACE"},{k:"dash",ic:"◫",l:"Dashboard"},{k:"terminal",ic:"◨",l:"Terminal"},
+    {k:"miq",ic:"⌕",l:"Market Research"},{k:"deep",ic:"✦",l:"Deep Search"},{k:"portfolio",ic:"▤",l:"Portfolio"},{k:"vendors",ic:"⚇",l:"Vendors"},
+    {sec:"AUTOMATION"},{k:"autosearch",ic:"⚡",l:"Auto Search"},{k:"runs",ic:"↻",l:"Search runs"},
+    {sec:"ACCOUNT"},{k:"credits",ic:"◍",l:"My credits"},{k:"settings",ic:"⚙",l:"Settings"}]);
+}
+function go(k){S.screen=k;S.notifOpen=false;render();}
+function subSwitcher(){
+  const subs=workSubs();const s=SUBS[S.sub];
+  if(!subs.length)return `<div class="card" style="padding:10px 12px;margin:2px 6px 10px;box-shadow:none"><span class="chip chip-warn">No subsidiary yet</span></div>`;
+  if(subs.length===1)return `<div class="card" style="padding:10px 12px;margin:2px 6px 10px;box-shadow:none">
+    <div class="muted" style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;font-weight:700">Subsidiary</div>
+    <b style="font-size:13px">${s.name}</b></div>`;
+  return `<div class="card" style="padding:10px 12px;margin:2px 6px 10px;box-shadow:none;border-color:var(--g)">
+    <div class="muted" style="font-size:10.5px;text-transform:uppercase;letter-spacing:.07em;font-weight:700">Subsidiary</div>
+    <select class="sel" style="margin-top:6px;padding:7px 9px;font-size:13px;font-weight:600" onchange="switchSub(this.value)">
+      ${subs.map(id=>`<option value="${id}" ${id===S.sub?"selected":""}>${SUBS[id].name}</option>`).join("")}
+    </select></div>`;
+}
+function switchSub(id){const before=myAccess();S.sub=id;S.selected=new Set();S.view="all";S.q="";S.convo=null;S.drawer=null;
+  const after=myAccess();
+  toast("Now viewing <b>"+SUBS[id].name+"</b>"+(after!==before?` — your access here is <b>${ACCESS_LABEL[after]}</b>`:" — parts, runs, uploads and credits are scoped to this subsidiary"));
+  render();}
+function needsSubScreens(){return ["terminal","miq","deep","portfolio","vendors","autosearch","runs","credits"].includes(S.screen);}
+function shell(){
+  const isOps=S.user.orgRole==="riq_ops"&&!S.impersonating;
+  let body;
+  if(!isOps && !S.sub && needsSubScreens()) body=noSubState();
+  else body=({dash:memberDash,terminal:terminalScreen,miq:marketIQ,deep:deepScreen,portfolio:portfolioScreen,vendors:vendorsScreen,
+    autosearch:autoSearchScreen,runs:runsScreen,credits:myCredits,settings:settingsScreen,
+    customers:opsCustomers,approvals:opsApprovals,cleanq:opsCleanQ,runsMon:opsRuns}[S.screen]||memberDash)();
+  return `
+<div class="shell">
+  <aside class="side">
+    <div class="logo" style="letter-spacing:.06em;font-size:15px">MarketIQ</div>
+    <div class="nav-sec" style="padding-top:0">${isOps?"INTERNAL":esc(COMPANY.accountName)}</div>
+    ${isOps?"":subSwitcher()}
+    ${nav()}
+    <div style="flex:1"></div>
+    <button class="nav-i" onclick="stub('Help & docs')">? Help</button>
+    <button class="nav-i" onclick="S.user=null;render()">⏻ Sign out</button>
+  </aside>
+  <div class="main">
+    ${S.impersonating?`<div class="impersonate">⚠ Viewing <b>${S.impersonating}</b> as RelianceIQ Ops — every action is audited
+      <span style="flex:1"></span><button class="btn-ghost btn-sm" onclick="S.impersonating=null;S.user=USERS.sara;S.screen='customers';render()">Exit customer view</button></div>`:""}
+    <div class="topbar">
+      <span class="ctx-badge" title="Your access in the selected subsidiary"><span class="dot" style="background:${isOps?"var(--amber)":myAccess()==="readonly"?"var(--amber)":"var(--g)"}"></span>${ACCESS_LABEL[myAccess()]||"No access"}${!isOps&&S.sub&&S.user.orgRole!=="org_admin"?" here":""}</span>
+      ${!isOps&&S.sub?`<span class="muted">▸ ${SUBS[S.sub].name}</span>`:""}
+      <div style="flex:1"></div>
+      ${!isOps&&S.sub&&can("research")?`<span class="credits-chip" id="creditChip">◍ ${fmt(memberBal())} credits</span>`:""}
+      ${bellHtml()}
+      <button class="avatar" title="${S.user.email} — open profile settings" onclick="S.screen='settings';S.set='profile';render()">${av(S.user.name)}</button>
+    </div>
+    <div class="content">${body}</div>
+  </div>
+</div>
+${S.notifOpen?notifPanel():""}
+${S.modal?renderModal():""}
+${S.drawer?renderDrawer():""}`;
+}
+function noSubState(){return `
+<div class="card empty" style="max-width:560px;margin:60px auto">
+  <div class="big-ic">🗂</div><b>You're not in a subsidiary yet</b>
+  <div style="margin-top:8px;line-height:1.6">You are not allocated to any subsidiary. Reach out to your org admin or a subsidiary admin to get added — you'll be able to work with parts once you're in.</div>
+  <button class="btn btn-o" style="margin-top:18px" onclick="pushNotif('john','review_req','Access request from '+S.user.name,S.user.email+' asked to join a subsidiary');toast('Request sent to your org admin')">Request access</button>
+</div>`;}
+
+/* ---------------- notifications ---------------- */
+function notifPanel(){const list=myNotifs();return `
+<div style="position:fixed;inset:0;z-index:70" onclick="S.notifOpen=false;render()"></div>
+<div class="notif-panel" onclick="event.stopPropagation()">
+  <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--border)">
+    <b>Notifications</b>
+    <span style="display:flex;gap:6px">
+      <button class="btn-ghost btn-sm" onclick="myNotifs().forEach(x=>x.read=true);render()">Mark all read</button>
+      <button class="btn-ghost btn-sm" onclick="S.notifOpen=false;openModal('nprefs')">⚙</button>
+    </span>
+  </div>
+  ${list.length?list.map((x,i)=>{const ic=NICON[x.type]||NICON.run_done;return `
+  <div class="notif-i ${x.read?"":"unread"}" onclick="NOTIFS['${S.user.id}'][${i}].read=true;render()">
+    <span class="notif-ic" style="background:${ic[1]};color:${ic[2]}">${ic[0]}</span>
+    <span style="flex:1"><b style="font-size:13px">${x.title}</b><br><span class="muted">${x.body}</span><br><span class="muted" style="font-size:11px">${x.when}</span></span>
+    ${x.read?"":'<span class="dot" style="background:var(--g);margin-top:6px"></span>'}
+  </div>`;}).join(""):`<div class="empty" style="padding:34px">No notifications yet</div>`}
+</div>`;}
+function mNotifPrefs(){return `
+<h3>Notification preferences</h3><div class="muted">In-app is always on for critical events. Choose what also lands in your inbox.</div>
+<table style="margin-top:14px"><tr><th>Event</th><th style="width:70px">In-app</th><th style="width:70px">Email</th></tr>
+${Object.entries({run_done:"Search run completed",run_zero:"Parts with zero results",upload_done:"File upload processed",credit_alloc:"Credits allocated to me",lot_expiry:"Credit lot expiring",review_req:"Vendors awaiting review",report_ready:"Report ready"}).map(([k,l])=>`
+<tr><td>${l}</td>
+<td><input type="checkbox" class="check" ${NPREFS[k].app?"checked":""} onclick="NPREFS['${k}'].app=this.checked"></td>
+<td><input type="checkbox" class="check" ${NPREFS[k].email?"checked":""} onclick="NPREFS['${k}'].email=this.checked"></td></tr>`).join("")}
+</table>
+<div class="foot"><button class="btn btn-p" onclick="closeModal();toast('Notification preferences saved')">Save</button></div>`;}
+
+/* ---------------- dashboard ---------------- */
+function memberDash(){
+  const hasSub=!!S.sub;
+  const orgRow = S.user.orgRole==="org_admin" ? `
+<div class="kpis">
+  <div class="card kpi"><div class="l">ORG · SUBSIDIARIES</div><div class="v">${Object.keys(SUBS).length}</div></div>
+  <div class="card kpi"><div class="l">ORG · MEMBERS</div><div class="v">${Object.values(USERS).filter(u=>u.orgRole!=="riq_ops"&&u.invite==="Accepted").length}</div></div>
+  <div class="card kpi"><div class="l">ORG · UNALLOCATED CREDITS</div><div class="v mono">${fmt(BAL.org)}</div><div class="d">of ${fmt(LOTS.reduce((a,l)=>a+l.credits,0))} purchased</div></div>
+  <div class="card kpi"><div class="l">EXPIRING LOT</div><div class="v mono" style="color:var(--amber)">6,150</div><div class="d">L-1041 · 12 Jul 2027 · <a href="#" onclick="event.preventDefault();S.screen='settings';S.set='billing';render()">billing →</a></div></div>
+</div>`:"";
+  return `
+<div class="page-h"><div><h2>Good morning, ${S.user.name.split(" ")[0]}</h2><div class="sub">${hasSub?SUBS[S.sub].name+" · ":""}${new Date().toDateString()}</div></div>
+<div style="display:flex;gap:9px">${can("part_create")&&hasSub?`<button class="btn btn-o" onclick="go('terminal')">↥ Upload parts</button>`:""}
+${can("research")&&hasSub?`<button class="btn btn-p" onclick="go('miq')">⌕ Research parts</button>`:hasSub?`<button class="btn btn-o" onclick="go('miq')">⌕ Browse parts</button>`:""}</div></div>
+${orgRow}
+${hasSub?`
+<div class="kpis">
+  ${can("research")?`<div class="card kpi"><div class="l">MY CREDITS</div><div class="v mono">${fmt(memberBal())}</div><div class="d">in ${SUBS[S.sub].name.split(" ")[0]}</div></div>`:""}
+  <div class="card kpi"><div class="l">PARTS</div><div class="v mono">${subParts().length}</div><div class="d">${subParts().filter(x=>x.status==="new").length} not yet searched</div></div>
+  <div class="card kpi"><div class="l">NEEDS ATTENTION</div><div class="v mono" style="color:var(--amber)">${subParts().filter(x=>x.status==="zero"||x.status==="noprice").length}</div><div class="d">zero-result or unpriced</div></div>
+  <div class="card kpi"><div class="l">ACTIVE RUNS</div><div class="v mono">${RUNS.filter(r=>r.sub===S.sub&&r.status==="running").length}</div><div class="d">${RUNS.filter(r=>r.sub===S.sub).length} total this month</div></div>
+</div>
+<div class="grid-2">
+  <div class="card" style="padding:18px"><h3 style="font-size:15px;margin-bottom:10px">Latest runs</h3>
+    ${RUNS.filter(r=>r.sub===S.sub).slice(0,3).map(r=>`<div class="rowline"><span><b>${r.id}</b> · ${r.type} · ${PEOPLE[r.by]||r.by}</span>
+    ${r.status==="running"?'<span class="chip chip-info">↻ Running</span>':`<span class="muted">${r.done}/${r.total} · ${r.when}</span>`}</div>`).join("")}
+    <button class="btn-ghost btn-sm" style="margin-top:8px" onclick="go('runs')">All runs →</button></div>
+  <div class="card" style="padding:18px"><h3 style="font-size:15px;margin-bottom:10px">Notifications</h3>
+    ${myNotifs().slice(0,3).map(x=>`<div class="rowline"><span>${x.title}</span><span class="muted">${x.when}</span></div>`).join("")||'<div class="muted">All caught up</div>'}
+    <button class="btn-ghost btn-sm" style="margin-top:8px" onclick="S.notifOpen=true;render()">Open notifications →</button></div>
+</div>`:noSubState()}`;}
+
+/* ---------------- terminal ---------------- */
+function terminalScreen(){return `
+<div class="page-h"><div><h2>Terminal</h2><div class="sub">Feed MarketIQ with your data — parts today, more sources on the roadmap</div></div>
+<button class="btn btn-o" onclick="toast('Template downloaded — riq_parts_template_v3.xlsx')">↧ Download template</button></div>
+<div class="grid-3" style="margin-bottom:22px">
+  ${can("part_create")?`<button class="card term-card" onclick="openModal('upload')">
+    <div class="term-ic">▦</div><b>Parts Portfolio</b>
+    <div class="muted" style="margin-top:5px">Upload SKUs via Excel/CSV — validation, dedup and error reports built in</div>
+    <span class="chip chip-ok" style="margin-top:10px">Active</span></button>`
+  :`<div class="card term-card off"><div class="term-ic">▦</div><b>Parts Portfolio</b>
+    <div class="muted" style="margin-top:5px">Read-only access — uploads need a Standard User role or above</div>
+    <span class="chip chip-mut" style="margin-top:10px">No permission</span></div>`}
+  ${["URL Upload","Procurement Data","Sales / Quote History","Supplier Data","Field Reports","IMS Data","Machine Data / BOMs"].map(c=>`
+  <div class="card term-card off"><div class="term-ic">◇</div><b>${c}</b>
+    <div class="muted" style="margin-top:5px">Planned data source</div>
+    <span class="chip chip-mut" style="margin-top:10px">Coming soon</span></div>`).join("")}
+</div>
+<div class="card"><div style="padding:16px 18px 4px"><h3 style="font-size:15px">Upload history</h3><div class="muted">${SUBS[S.sub].name}</div></div>
+<table><tr><th>Upload</th><th>File</th><th>By</th><th>Rows</th><th>Added</th><th>Duplicates</th><th>Errors</th><th>Status</th><th></th></tr>
+${UPLOADS.filter(u=>u.sub===S.sub).map(u=>`<tr><td><b>${u.id}</b></td><td>${u.file}</td><td>${PEOPLE[u.by]||u.by}</td>
+<td class="mono">${fmt(u.rows)}</td><td class="mono">${fmt(u.added)}</td>
+<td class="mono">${u.dupes?'<span class="chip chip-warn">'+u.dupes+"</span>":0}</td>
+<td class="mono">${u.errors?'<span class="chip chip-bad">'+u.errors+"</span>":0}</td>
+<td>${u.status==="completed"?'<span class="chip chip-ok">Completed</span>':'<span class="chip chip-info">↻ Processing</span>'}</td>
+<td>${u.errors?`<button class="btn-ghost btn-sm" onclick="toast('Error report downloaded')">↧ Errors</button>`:""}</td></tr>`).join("")}
+</table></div>`;}
+
+/* ---------------- market research ---------------- */
+function statusChip(pt){
+  if(pt.status==="searching")return `<div style="min-width:120px"><span class="chip chip-info">↻ Searching…</span><div class="progress" style="margin-top:5px"><i style="width:${pt.progress}%"></i></div></div>`;
+  if(pt.status==="queued")return `<span class="chip chip-mut">Queued</span>`;
+  if(pt.status==="zero")return `<span class="chip chip-bad">No vendors found</span>`;
+  if(pt.status==="noprice")return `<span class="chip chip-warn">Vendors, no pricing</span>`;
+  if(pt.status==="done")return `<span class="chip chip-ok">✓ ${pt.vendors} vendors</span>`;
+  return `<span class="chip chip-mut">Not searched</span>`;
+}
+function subParts(){return PARTS.filter(x=>x.sub===S.sub);}
+function filteredParts(){let list=subParts();
+  if(S.view==="zero")list=list.filter(x=>x.status==="zero"||x.status==="noprice");
+  if(S.view==="new")list=list.filter(x=>x.status==="new");
+  if(S.q)list=list.filter(x=>(x.name+x.mfr+x.mfrNum+x.internal).toLowerCase().includes(S.q.toLowerCase()));
+  return list;}
+function marketIQ(){const list=filteredParts();const sel=S.selected.size;const cw=can("research");return `
+<div class="page-h"><div><h2>Market Research</h2><div class="sub">${SUBS[S.sub].name} · region ${SUBS[S.sub].continent} · ${SUBS[S.sub].currency} · 1 credit per part search${can("research")?"":" · read-only for your role"}</div></div>
+<div style="display:flex;gap:9px">
+  ${can("part_create")?`<button class="btn btn-o" onclick="openModal('upload')">↥ Upload parts</button>
+  <button class="btn btn-o" onclick="openModal('addpart')">+ Add part</button>`:""}
+  <button class="btn btn-o" onclick="toast('Exports selected (or all) parts + vendors as .xlsx')">↧ Export</button>
+</div></div>
+<div class="views">
+  ${[["all","All parts ("+subParts().length+")"],["new","Not searched"],["zero","Needs attention"]].map(([k,l])=>`<button class="view-t ${S.view===k?"on":""}" onclick="S.view='${k}';render()">${l}</button>`).join("")}
+  <button class="view-t" onclick="stub('Saved views — named filter/column sets, shareable with the subsidiary')">+ New view</button>
+</div>
+${sel&&cw?`<div class="selbar"><b>${sel} part${sel>1?"s":""} selected</b><span style="opacity:.8">· ${sel} credit${sel>1?"s":""} to research</span>
+  <div style="flex:1"></div>
+  <button class="btn btn-sm" style="background:#fff;color:var(--g-deep);font-weight:650" onclick="startResearch()">⚡ Research selected</button>
+  <button class="btn-ghost btn-sm" style="color:#fff" onclick="S.selected.clear();render()">Clear</button></div>`:""}
+<div class="toolbar">
+  <input class="inp" placeholder="⌕  Search part name, number, manufacturer…" value="${esc(S.q)}" oninput="S.q=this.value;renderSoft()">
+  <button class="btn btn-o btn-sm" onclick="stub('Column filters & grouping — AG Grid server-side model')">Filters</button>
+  <span class="muted">${list.length} of ${subParts().length} parts</span>
+</div>
+<div class="card"><table>
+<tr>${cw?`<th style="width:36px"><input type="checkbox" class="check" onclick="toggleAll(this)"></th>`:""}
+<th>Internal #</th><th>Part</th><th>Manufacturer</th><th>Mfr part #</th><th>Signals</th><th>Vendors</th><th>Priced</th><th>Last searched</th><th></th></tr>
+${list.map(pt=>`
+<tr>
+  ${cw?`<td><input type="checkbox" class="check" ${S.selected.has(pt.id)?"checked":""} onclick="toggleSel('${pt.id}')"></td>`:""}
+  <td class="mono muted">${pt.internal}</td>
+  <td><b>${pt.name}</b></td>
+  <td>${pt.mfr}</td><td class="mono">${pt.mfrNum}</td>
+  <td>${statusChip(pt)}</td>
+  <td class="mono">${pt.vendors||"—"}</td><td class="mono">${pt.withPrice||"—"}</td>
+  <td class="muted">${pt.last}</td>
+  <td style="white-space:nowrap">${pt.vendors?`<button class="btn-ghost btn-sm" onclick="S.drawer={t:'vendors',part:'${pt.id}'};render()">Vendors →</button>`:""}
+  ${pt.status==="zero"&&cw?`<button class="btn-ghost btn-sm" onclick="go('deep');toast('Deep Search — AI fallback for zero-result parts')">✦ Deep Search</button>`:""}</td>
+</tr>`).join("")}
+</table></div>`;}
+function renderSoft(){const q=document.activeElement;const pos=q&&q.selectionStart;render();
+  const inp=document.querySelector(".toolbar .inp");if(inp){inp.focus();if(pos!=null)inp.setSelectionRange(pos,pos);}}
+function toggleSel(id){S.selected.has(id)?S.selected.delete(id):S.selected.add(id);render();}
+function toggleAll(cb){const list=filteredParts();S.selected=cb.checked?new Set(list.filter(x=>x.status!=="searching"&&x.status!=="queued").map(x=>x.id)):new Set();render();}
+
+/* ---------------- run simulation ---------------- */
+function startResearch(){
+  if(!can("research")){toast("Your role can't run research — it consumes credits");return;}
+  const ids=[...S.selected];const cost=ids.length;
+  if(cost>memberBal()){toast("Insufficient credits — ask "+PEOPLE[SUBS[S.sub].head]+" for an allocation");return;}
+  BAL.members[S.user.id+":"+S.sub]=(BAL.members[S.user.id+":"+S.sub]||0)-cost;
+  const run={id:"RUN-0"+(208+RUNS.length),by:S.user.id,type:"Selected",total:ids.length,done:0,zero:0,failed:0,
+             credits:cost,refunded:0,status:"running",when:"Just now",parts:ids,sub:S.sub};
+  RUNS.unshift(run);S.selected=new Set();
+  ids.forEach(id=>{const pt=PARTS.find(x=>x.id===id);pt.status="queued";pt.progress=0;});
+  LEDGER.unshift({t:"Consume",who:S.user.name,detail:`Search · ${ids.length} parts · ${run.id}`,amt:"−"+cost,when:"Just now"});
+  toast(`<b>${run.id}</b> started — ${ids.length} parts queued · ${cost} credits deducted`);
+  render();tick(run);
+}
+function tick(run){
+  const pending=run.parts.map(id=>PARTS.find(x=>x.id===id)).filter(x=>x.status==="queued"||x.status==="searching");
+  if(!pending.length){run.status="completed";
+    pushNotif(run.by,"run_done",run.id+" completed",`${run.done-run.zero} with vendors · ${run.zero} zero-result${run.refunded?` · ${run.refunded} credits refunded`:""}`);
+    if(run.zero)pushNotif(SUBS[run.sub]?.head||"mike","review_req","New results need review",run.id+" · "+SUBS[run.sub].name);
+    render();return;}
+  pending.slice(0,3).forEach(pt=>{if(pt.status==="queued")pt.status="searching";
+    pt.progress=Math.min(100,pt.progress+18+Math.random()*22);
+    if(pt.progress>=100)finishPart(run,pt);});
+  render();setTimeout(()=>tick(run),750);
+}
+function finishPart(run,pt){
+  run.done++; pt.resBy=run.by; pt.modBy=run.by;
+  if(pt.id==="PRT-1008"){
+    pt.status="zero";pt.vendors=0;pt.withPrice=0;pt.last="Just now";
+    run.zero++;run.refunded+=0.75;BAL.members[run.by+":"+run.sub]+=0.75;
+    LEDGER.unshift({t:"Refund",who:"System",detail:"Zero results · "+pt.mfrNum+" · kept 0.25",amt:"+0.75",when:"Just now"});
+    toast(`No vendors for <b>${pt.mfrNum}</b> — 0.75 credits refunded automatically`);
+  }else{
+    const v=2+Math.floor(Math.random()*6);pt.status="done";pt.vendors=v;pt.withPrice=Math.max(1,v-1);pt.last="Just now";
+    if(!VENDORS[pt.id])VENDORS[pt.id]=[
+      ven("Motion Industries","$"+(80+Math.random()*400).toFixed(2),0,"5 days","In stock","search",.93,"pending"),
+      ven("Aftfasteners","$"+(80+Math.random()*400).toFixed(2),0,"7–10 days","In stock","search",.89,"pending"),
+      ven("Accu-components","$"+(80+Math.random()*400).toFixed(2),0,"3 days","Low stock","search",.84,"pending")].slice(0,Math.min(v,3));
+  }
+}
+
+/* ---------------- deep search ---------------- */
+function deepScreen(){const clist=CONVOS.filter(x=>x.sub===S.sub);const c=clist.find(x=>x.id===S.convo)||clist[0]||{id:null,title:"",msgs:[]};const cw=can("research");return `
+<div class="page-h"><div><h2>Deep Search</h2><div class="sub">${SUBS[S.sub].name} · AI research assistant — 2 credits per question${cw?"":" · read-only for your role"}</div></div>
+${cw?`<button class="btn btn-o" onclick="CONVOS.unshift({id:'c'+Date.now(),sub:S.sub,title:'New conversation',when:'Just now',msgs:[]});S.convo=CONVOS[0].id;render()">+ New conversation</button>`:""}</div>
+<div class="chat">
+  <div class="chat-list">
+    ${clist.map(x=>`<div class="chat-li ${x.id===c.id?"on":""}" onclick="S.convo='${x.id}';render()"><b style="font-size:13px">${esc(x.title)}</b><br><span class="muted">${x.when}</span></div>`).join("")||'<div class="empty" style="padding:24px">No conversations in this subsidiary yet</div>'}
+  </div>
+  <div class="chat-main">
+    <div class="chat-msgs">
+      ${c.msgs.length?c.msgs.map(m=>`<div class="msg ${m.who}">${m.txt}${m.who==="ai"&&m.txt.includes("add either")&&can("part_edit")?`<div style="margin-top:10px"><button class="btn btn-o btn-sm" onclick="toast('DieselOps Inc. added as a vendor to PRT-1005 — pending review')">+ Add DieselOps as vendor</button></div>`:""}</div>`).join("")
+      :`<div class="empty">Ask about a part, a market, or a vendor.</div>`}
+    </div>
+    <div class="chat-input">
+      <input class="inp" id="ds-input" placeholder="${cw?"e.g. Who supplies Garrett 711736-5026S turbos in the US?":"Read-only role — asking questions consumes credits"}" ${cw?"":"disabled"} onkeydown="if(event.key==='Enter')dsSend()">
+      <button class="btn btn-p" ${cw?"":"disabled"} onclick="dsSend()">Send · 2 ◍</button>
+    </div>
+  </div>
+</div>`;}
+function dsSend(){const v=$("ds-input").value.trim();if(!v)return;
+  let c=CONVOS.find(x=>x.id===S.convo&&x.sub===S.sub);
+  if(!c){c={id:'c'+Date.now(),sub:S.sub,title:'New conversation',when:'Just now',msgs:[]};CONVOS.unshift(c);S.convo=c.id;}
+  c.msgs.push({who:"user",txt:esc(v)});
+  if(c.title==="New conversation")c.title=v.slice(0,40);
+  BAL.members[S.user.id+":"+S.sub]-=2;
+  LEDGER.unshift({t:"Consume",who:S.user.name,detail:"Deep Search question",amt:"−2",when:"Just now"});
+  render();
+  setTimeout(()=>{c.msgs.push({who:"ai",txt:"I searched distributor networks and marketplaces. <b>2 candidate suppliers</b> match this part number. Prices range $148–$189.50. Want me to add either as a vendor?"});render();},900);}
+
+/* ---------------- portfolio ---------------- */
+function portfolioScreen(){const rows=subParts().filter(x=>x.accepted>0);return `
+<div class="page-h"><div><h2>Portfolio</h2><div class="sub">Parts with accepted vendors — your cleaned, decision-ready market data</div></div>
+<div style="display:flex;gap:9px"><button class="btn btn-o" onclick="toast('Exports portfolio as .xlsx')">↧ Export</button>
+${can("report_edit")?`<button class="btn btn-p" onclick="genPPC()">▤ Generate Pulse Check</button>`:""}</div></div>
+<div class="views"><button class="view-t on">Parts</button>
+<button class="view-t" onclick="stub('Portfolio Data — aggregated market stats, price distributions, competitor overlap')">Data</button></div>
+<div class="card"><table>
+<tr><th>Part</th><th>Mfr part #</th><th>OEM list</th><th>Market range (accepted)</th><th>Position</th><th>Accepted</th><th></th></tr>
+${rows.map(pt=>{const vs=(VENDORS[pt.id]||[]).filter(v=>v.status==="accepted"&&v.pnum);
+  const lo=vs.length?Math.min(...vs.map(v=>v.pnum)):0,hi=vs.length?Math.max(...vs.map(v=>v.pnum)):0;
+  const oem=pt.id==="PRT-1001"?452:null;
+  return `<tr><td><b>${pt.name}</b><br><span class="muted">${pt.internal}</span></td><td class="mono">${pt.mfrNum}</td>
+  <td class="mono">${oem?"$"+oem.toFixed(2):"—"}</td>
+  <td>${vs.length?`<span class="pricebar"><span class="mono">$${lo.toFixed(0)}</span><i style="width:${30+(hi-lo)/6}px"></i><span class="mono">$${hi.toFixed(0)}</span></span>`:'<span class="muted">accept vendors to see</span>'}</td>
+  <td>${oem&&vs.length?(oem>hi?'<span class="chip chip-warn">Above market</span>':'<span class="chip chip-ok">At market</span>'):"—"}</td>
+  <td class="mono">${pt.accepted}</td>
+  <td><button class="btn-ghost btn-sm" onclick="S.drawer={t:'vendors',part:'${pt.id}'};render()">Vendors →</button></td></tr>`;}).join("")}
+</table></div>`;}
+function genPPC(){toast("▤ Pulse Check queued — you'll be notified when it's ready");
+  setTimeout(()=>{pushNotif(S.user.id,"report_ready","Portfolio Pulse Check ready","PPC-2026-42911 · 30 SKUs · competitive uplift $108,097");toast("▤ <b>Pulse Check ready</b> — check notifications");},3500);}
+
+/* ---------------- auto search ---------------- */
+function autoSearchScreen(){const cw=can("research");return `
+<div class="page-h"><div><h2>Auto Search</h2><div class="sub">Keep data fresh without manual runs — scheduled runs land in the bulk queue${cw?"":" · read-only for your role"}</div></div></div>
+<div class="card" style="padding:20px;max-width:640px">
+  <label class="lbl" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600;font-size:14px">
+    <input type="checkbox" class="check" ${AUTOSEARCH.onUpload?"checked":""} ${cw?"":"disabled"} onclick="AUTOSEARCH.onUpload=this.checked">Research new parts automatically after upload</label>
+  <div class="muted" style="margin-left:23px">Each uploaded part is queued for research immediately. Credits consumed per part as usual.</div>
+  <label class="lbl" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:600;font-size:14px;margin-top:18px">
+    <input type="checkbox" class="check" ${AUTOSEARCH.monthly?"checked":""} ${cw?"":"disabled"} onclick="AUTOSEARCH.monthly=this.checked">Monthly refresh</label>
+  <div class="muted" style="margin-left:23px">Re-run research for a chosen scope on a schedule.</div>
+  <div style="display:flex;gap:14px;margin:12px 0 0 23px">
+    <span><label class="lbl">Day of month</label><select class="sel" style="width:120px" ${cw?"":"disabled"}><option>1st</option><option>15th</option></select></span>
+    <span><label class="lbl">Scope</label><select class="sel" style="width:260px" ${cw?"":"disabled"}><option>Priority view (500 parts)</option><option>All parts</option><option>Needs-attention view</option></select></span>
+  </div>
+  <div class="muted" style="margin:14px 0 0 23px">Estimated cost: <b>500 credits/month</b></div>
+  ${cw?`<div style="margin-top:20px"><button class="btn btn-p" onclick="toast('Auto Search schedule saved — next run 1 Aug, 02:00 ET')">Save schedule</button></div>`:""}
+</div>`;}
+
+/* ---------------- my credits ---------------- */
+function myCredits(){return `
+<div class="page-h"><div><h2>My credits</h2><div class="sub">${SUBS[S.sub].name} — balances are scoped per subsidiary</div></div>
+${can("research")?`<button class="btn btn-o" onclick="toast('Request sent to '+PEOPLE[SUBS[S.sub].head])">Request credits</button>`:""}</div>
+<div class="kpis">
+  <div class="card kpi"><div class="l">AVAILABLE</div><div class="v mono">${fmt(memberBal())}</div></div>
+  <div class="card kpi"><div class="l">USED (ALL TIME)</div><div class="v mono">30</div></div>
+  <div class="card kpi"><div class="l">REFUNDED</div><div class="v mono">2.25</div><div class="d">zero-result & failed searches</div></div>
+</div>
+<div class="card"><div style="padding:16px 18px 4px"><h3 style="font-size:15px">My ledger</h3></div>
+<table><tr><th>Type</th><th>Detail</th><th>Credits</th><th>When</th></tr>
+${LEDGER.filter(l=>l.who===S.user.name||l.detail.includes(S.user.name)).map(l=>`<tr><td><span class="chip ${l.amt.startsWith("+")?"chip-ok":"chip-mut"}">${l.t}</span></td><td>${esc(l.detail)}</td><td class="mono"><b>${l.amt}</b></td><td class="muted">${l.when}</td></tr>`).join("")||'<tr><td colspan="4" class="muted">No transactions yet</td></tr>'}
+</table></div>`;}
+
+/* ---------------- runs ---------------- */
+function runsScreen(){return `
+<div class="page-h"><div><h2>Search runs</h2><div class="sub">${SUBS[S.sub].name} — visible to everyone in the subsidiary (sharing is on)</div></div></div>
+${RUNS.filter(r=>r.sub===S.sub).map(r=>{const pct=Math.round(r.done/r.total*100);return `
+<div class="card runcard">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px">
+    <div><b>${r.id}</b> <span class="muted">· ${r.type} · started by ${PEOPLE[r.by]||r.by} · ${r.when}</span></div>
+    ${r.status==="running"?`<span class="chip chip-info">↻ Running</span>`:`<span class="chip chip-ok">Completed</span>`}
+  </div>
+  <div style="display:flex;align-items:center;gap:16px;margin-top:12px">
+    <div class="progress" style="flex:1"><i style="width:${pct}%"></i></div>
+    <span class="mono muted">${r.done}/${r.total} parts</span>
+  </div>
+  <div style="display:flex;gap:18px;margin-top:10px;font-size:12.5px" class="muted">
+    <span>✓ ${r.done-r.zero-r.failed} with results</span><span>∅ ${r.zero} zero-result</span><span>✕ ${r.failed} failed</span>
+    <span style="flex:1"></span>
+    <span>◍ ${fmt(r.credits)} consumed${r.refunded?` · <b style="color:var(--g-deep)">${r.refunded} refunded</b>`:""}</span>
+    ${r.status==="running"&&(r.by===S.user.id||can("sub_edit"))?`<button class="btn-ghost btn-sm btn-danger" onclick="cancelRun('${r.id}')">Cancel remaining</button>`:`<button class="btn-ghost btn-sm" onclick="stub('Run detail — per-part status, errors, costs')">Details →</button>`}
+  </div>
+</div>`;}).join("")}`;}
+function cancelRun(id){const r=RUNS.find(x=>x.id===id);
+  r.parts?.forEach(pid=>{const pt=PARTS.find(x=>x.id===pid);
+    if(pt.status==="queued"){pt.status="new";r.total--;r.credits--;BAL.members[r.by+":"+r.sub]+=1;}});
+  toast("Queued parts cancelled and refunded — running parts will finish");render();}
+
+/* ---------------- vendors & competitors directory ---------------- */
+let VENDIR={ "usa|motion industries":{cat:"Bearings & Drive",src:"ai",rating:4},
+  "usa|aftfasteners":{cat:"Fasteners",src:"ai",rating:3},
+  "usa|accu-components":{cat:"Bearings & Drive",src:"ai"},
+  "eu|kramp":{cat:"General distributor",src:"ai",rating:5} };
+const VCATS=["Hydraulics","Filtration","Electrical","Bearings & Drive","Fasteners","Engine & Fuel","General distributor","Other"];
+function vdKey(n){return S.sub+"|"+n.toLowerCase();}
+function vendorDirectory(){const m={};
+  subParts().forEach(pt=>(VENDORS[pt.id]||[]).forEach(v=>{
+    if(!m[v.name])m[v.name]={name:v.name,parts:0,accepted:0};
+    m[v.name].parts++; if(v.status==="accepted")m[v.name].accepted++;}));
+  return Object.values(m).sort((a,b)=>b.parts-a.parts);}
+function vendorsScreen(){const ce=can("part_edit");const rows=vendorDirectory();return `
+<div class="page-h"><div><h2>Vendors & Competitors</h2><div class="sub">${SUBS[S.sub].name} — every unique vendor found across this subsidiary's searches. Categories are AI-assigned and editable; ratings are yours.</div></div>
+<button class="btn btn-o" onclick="toast('Exports the vendor directory as .xlsx')">↧ Export</button></div>
+<div class="card"><table>
+<tr><th>Vendor</th><th>Parts found</th><th>Accepted</th><th>Product category</th><th>Rating</th></tr>
+${rows.map(v=>{const d=VENDIR[vdKey(v.name)]||{};const r=d.rating||0;const nm=v.name.replace(/'/g,"\\'");return `
+<tr><td><b>${v.name}</b></td><td class="mono">${v.parts}</td><td class="mono">${v.accepted}</td>
+<td>${ce?`<span style="display:flex;gap:7px;align-items:center"><select class="sel" style="width:190px;padding:5px 8px;font-size:12.5px" onchange="setVCat('${nm}',this.value)">
+  <option value="">— none —</option>${VCATS.map(c=>`<option ${d.cat===c?"selected":""}>${c}</option>`).join("")}</select>
+  ${d.cat?(d.src==="ai"?'<span class="chip chip-info">AI</span>':'<span class="chip chip-mut">user</span>'):""}</span>`
+  :(d.cat?`${d.cat} ${d.src==="ai"?'<span class="chip chip-info">AI</span>':""}`:'<span class="muted">—</span>')}</td>
+<td style="white-space:nowrap">${[1,2,3,4,5].map(i=>`<button ${ce?`onclick="setVRating('${nm}',${i})"`:""} style="font-size:16px;color:${i<=r?"var(--amber)":"#d3dcd8"};padding:0 1px">★</button>`).join("")}</td>
+</tr>`;}).join("")||'<tr><td colspan="5"><div class="empty">No vendors yet — run some searches</div></td></tr>'}
+</table></div>`;}
+function setVCat(n,c){const k=vdKey(n);VENDIR[k]={...(VENDIR[k]||{}),cat:c||null,src:c?"user":null};toast("Category saved · set by "+S.user.name);render();}
+function setVRating(n,r){const k=vdKey(n);VENDIR[k]={...(VENDIR[k]||{}),rating:r};toast("Rated "+r+"/5");render();}
+
+/* ============================ SETTINGS ============================ */
+function settingsScreen(){
+  const items=[["profile","Profile",true],
+    ["company","Organization Info",true],
+    ["billing","Account & Billing",can("billing")],
+    ["usage","Usage",true],
+    ["audit","Audit Log",can("billing")||myAccess()==="sub_admin"],
+    ["users","Users",true],
+    ["io","Imports & Exports",true],
+    ["subs","Subsidiaries",true]];
+  const fn={profile:setProfile,company:setCompany,billing:setBilling,usage:setUsage,audit:setAudit,users:setUsers,io:setIO,subs:setSubs}[S.set]||setProfile;
+  return `
+<div class="page-h"><div><h2>Settings</h2><div class="sub">What you can see and edit here depends on your access: <b>${ACCESS_LABEL[myAccess()]}</b></div></div></div>
+<div class="set-wrap">
+  <div class="set-nav card" style="padding:10px 8px">
+    ${items.filter(x=>x[2]).map(([k,l])=>`<button class="nav-i ${S.set===k?"on":""}" onclick="S.set='${k}';render()">${l}</button>`).join("")}
+  </div>
+  <div class="set-body">${fn()}</div>
+</div>`;}
+
+function setProfile(){return `
+<div class="card" style="padding:20px">
+  <h3 style="font-size:15px">My profile</h3>
+  <div style="display:flex;gap:14px;align-items:center;margin-top:14px"><span class="avatar" style="width:52px;height:52px;font-size:18px">${av(S.user.name)}</span>
+  <div><b style="font-size:16px">${S.user.name}</b><br><span class="muted">${S.user.email} · ${ACCESS_LABEL[myAccess()]}</span></div></div>
+  <div class="grid-2" style="max-width:640px">
+    <span><label class="lbl">Display name</label><input class="inp" value="${S.user.name}"></span>
+    <span><label class="lbl">Time zone (personal)</label><select class="sel"><option>Account default (${COMPANY.tz})</option><option>America/Chicago</option><option>Europe/Berlin</option></select></span>
+  </div>
+  <label class="lbl">My access</label>
+  <div>${S.user.orgRole==="org_admin"?'<span class="chip chip-info">Org Admin — all subsidiaries</span>':
+    (Object.keys(S.user.subRoles||{}).length
+      ? Object.entries(S.user.subRoles).map(([sid,r])=>`<span class="chip ${r==="sub_admin"?"chip-ok":r==="readonly"?"chip-warn":"chip-mut"}" style="margin-right:6px">${SUBS[sid].name}: ${ACCESS_LABEL[r]}</span>`).join("")
+      : '<span class="chip chip-warn">No subsidiary yet</span>')}</div>
+  <div style="display:flex;gap:10px;margin-top:20px">
+    <button class="btn btn-p" onclick="toast('Profile saved')">Save</button>
+    <button class="btn btn-o" onclick="stub('Change password — Firebase flow')">Change password</button>
+    <button class="btn btn-o" onclick="closeModal();openModal('nprefs')">Notification preferences</button>
+  </div>
+</div>`;}
+
+function setCompany(){const e=can("sub_create");/* org admin proxy */ const ed=S.user.orgRole==="org_admin";return `
+<div class="card" style="padding:20px">
+  <div style="display:flex;justify-content:space-between;align-items:center"><h3 style="font-size:15px">Organization info</h3>
+  ${ed?"":'<span class="chip chip-mut">Read-only — editable by Org Admin</span>'}</div>
+  <div class="grid-2" style="max-width:720px">
+    <span><label class="lbl">Account name</label><input class="inp" value="${esc(COMPANY.accountName)}" ${ed?"":"disabled"}></span>
+    <span><label class="lbl">Company name</label><input class="inp" value="${esc(COMPANY.companyName)}" ${ed?"":"disabled"}></span>
+    <span><label class="lbl">Company domain</label><input class="inp" value="${esc(COMPANY.domain)}" ${ed?"":"disabled"}></span>
+    <span><label class="lbl">Industry</label><input class="inp" value="${esc(COMPANY.industry)}" ${ed?"":"disabled"}></span>
+    <span><label class="lbl">Time zone (account default)</label><select class="sel" ${ed?"":"disabled"}><option>${COMPANY.tz}</option><option>America/Chicago (CT)</option><option>Europe/Berlin (CET)</option></select></span>
+    <span><label class="lbl">Fiscal year</label><select class="sel" ${ed?"":"disabled"}><option>${COMPANY.fiscal}</option><option>April – March</option><option>July – June</option></select></span>
+    <span style="grid-column:1/-1"><label class="lbl">Address</label><input class="inp" value="${esc(COMPANY.address)}" ${ed?"":"disabled"}></span>
+    <span><label class="lbl">City</label><input class="inp" value="${esc(COMPANY.city)}" ${ed?"":"disabled"}></span>
+    <span><label class="lbl">State</label><input class="inp" value="${esc(COMPANY.state)}" ${ed?"":"disabled"}></span>
+    <span><label class="lbl">ZIP</label><input class="inp" value="${esc(COMPANY.zip)}" ${ed?"":"disabled"}></span>
+    <span><label class="lbl">Country</label><input class="inp" value="${esc(COMPANY.country)}" ${ed?"":"disabled"}></span>
+  </div>
+  ${ed?`<div style="margin-top:20px"><button class="btn btn-p" onclick="toast('Company account saved — change recorded in audit log')">Save</button></div>`:""}
+</div>`;}
+
+function setBilling(){return `
+<div class="card" style="padding:20px;margin-bottom:16px">
+  <h3 style="font-size:15px">Credits usage & limits</h3>
+  <div class="kpis" style="margin-top:14px;margin-bottom:6px">
+    <div class="card kpi"><div class="l">PURCHASED (ALL TIME)</div><div class="v mono">${fmt(LOTS.reduce((a,l)=>a+l.credits,0))}</div></div>
+    <div class="card kpi"><div class="l">COMPANY SPENT</div><div class="v mono">${fmt(3926)}</div></div>
+    <div class="card kpi"><div class="l">REMAINING BALANCE</div><div class="v mono">${fmt(LOTS.reduce((a,l)=>a+l.remaining,0))}</div><div class="d">across all lots</div></div>
+    <div class="card kpi"><div class="l">ORG UNALLOCATED</div><div class="v mono">${fmt(BAL.org)}</div></div>
+  </div>
+  <table><tr><th>Subsidiary</th><th>Allocated</th><th>Spent</th><th>Pending (unspent)</th><th style="width:170px">Consumption</th></tr>
+  ${Object.values(SUBS).map(s=>{const u=USAGE[s.id]||{alloc:0,used:0};const pct=u.alloc?Math.round(u.used/u.alloc*100):0;return `
+  <tr><td><b>${s.name}</b></td><td class="mono">${fmt(u.alloc)}</td><td class="mono">${fmt(u.used)}</td><td class="mono"><b>${fmt(u.alloc-u.used)}</b></td>
+  <td><div class="progress"><i style="width:${pct}%"></i></div><span class="muted">${pct}%</span></td></tr>`;}).join("")}
+  </table>
+</div>
+<div class="card" style="padding:20px;margin-bottom:16px">
+  <div style="display:flex;justify-content:space-between;align-items:center"><h3 style="font-size:15px">Billing</h3>
+  <button class="btn btn-o btn-sm" onclick="stub('Request credits — creates a purchase request to your Account Director')">Request credits</button></div>
+  <div class="rowline" style="margin-top:10px"><span class="muted">Payment method</span><b>Invoice · NET-30</b></div>
+  <div class="rowline"><span class="muted">Billing contact</span><b>accounts-payable@agco.com</b></div>
+  <table style="margin-top:12px"><tr><th>Purchase</th><th>Invoice</th><th>Credits</th><th>Date</th><th>Expires</th><th>Remaining</th></tr>
+  ${LOTS.map(l=>`<tr><td><b>${l.id}</b></td><td class="mono">${l.invoice}</td><td class="mono">${fmt(l.credits)}</td><td>${l.purchased}</td><td>${l.expires}</td><td class="mono"><b>${fmt(l.remaining)}</b></td></tr>`).join("")}
+  </table>
+</div>
+<div class="card" style="padding:20px">
+  <h3 style="font-size:15px">Company contacts <span class="muted" style="font-weight:400">— so the RelianceIQ team reaches the right person</span></h3>
+  <table style="margin-top:12px"><tr><th>Name</th><th>Purpose</th><th>Email</th><th></th></tr>
+  <tr><td><b>John Carter</b></td><td>Commercial / primary</td><td>john.carter@agco.com</td><td><button class="btn-ghost btn-sm" onclick="stub('Edit contact')">Edit</button></td></tr>
+  <tr><td><b>Mike Ross</b></td><td>Technical / data</td><td>mike.ross@agco.com</td><td><button class="btn-ghost btn-sm" onclick="stub('Edit contact')">Edit</button></td></tr>
+  </table>
+  <button class="btn btn-o btn-sm" style="margin-top:12px" onclick="stub('Add contact')">+ Add contact</button>
+</div>`;}
+
+function setUsage(){const mySubs=S.user.orgRole==="org_admin"?Object.keys(SUBS):userSubs(S.user);return `
+<div class="card" style="padding:20px">
+  <h3 style="font-size:15px">Subsidiary usage</h3>
+  <div class="muted" style="margin-top:3px">You see the subsidiaries you have access to${S.user.orgRole==="org_admin"?" (all, as Org Admin)":""}</div>
+  ${mySubs.length?`<table style="margin-top:14px"><tr><th>Subsidiary</th><th>Allocated</th><th>Spent</th><th>Pending</th><th>Searches this month</th><th>Members</th></tr>
+  ${mySubs.map(id=>{const s=SUBS[id];const u=USAGE[id]||{alloc:0,used:0};return `
+  <tr><td><b>${s.name}</b></td><td class="mono">${fmt(u.alloc)}</td><td class="mono">${fmt(u.used)}</td><td class="mono">${fmt(u.alloc-u.used)}</td>
+  <td class="mono">${id==="usa"?312:87}</td><td class="mono">${s.members.length}</td></tr>`;}).join("")}
+  </table>`:`<div class="empty">No subsidiary access yet</div>`}
+</div>`;}
+
+function setAudit(){return `
+<div class="card"><div style="padding:16px 18px 4px;display:flex;justify-content:space-between;align-items:center">
+  <div><h3 style="font-size:15px">Audit log</h3><div class="muted">${myAccess()==="sub_admin"?"Scoped to your subsidiaries":"Organization-wide"}</div></div>
+  <button class="btn btn-o btn-sm" onclick="stub('Export audit CSV')">↧ Export</button></div>
+<table><tr><th>When</th><th>Actor</th><th>Role</th><th>Action</th><th>Target</th></tr>
+${AUDIT.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join("")}</tr>`).join("")}
+</table></div>`;}
+
+function setUsers(){const list=Object.values(USERS).filter(u=>u.orgRole!=="riq_ops");return `
+<div class="card"><div style="padding:16px 18px 4px;display:flex;justify-content:space-between;align-items:center">
+  <div><h3 style="font-size:15px">Users</h3><div class="muted">Access is granted <b>per subsidiary</b> — the same person can be Sub Admin in one and Read-only in another</div></div>
+  ${can("user_add")?`<button class="btn btn-p btn-sm" onclick="openModal('invite')">+ Add user</button>`:""}</div>
+<table><tr><th>Name</th><th>Email</th><th>Org role</th><th>Access per subsidiary</th><th>Invite status</th><th>Created</th><th>Last active</th>${can("user_edit")?"<th></th>":""}</tr>
+${list.map(u=>`<tr>
+<td><div style="display:flex;gap:10px;align-items:center"><span class="avatar">${av(u.name)}</span><b>${u.name}</b></div></td>
+<td class="muted">${u.email}</td>
+<td>${u.orgRole==="org_admin"?'<span class="chip chip-info">Org Admin</span>':'<span class="chip chip-mut">Member</span>'}</td>
+<td>${Object.keys(u.subRoles||{}).length
+     ? Object.entries(u.subRoles).map(([sid,r])=>`<span class="chip ${r==="sub_admin"?"chip-ok":r==="readonly"?"chip-warn":"chip-mut"}" style="margin-right:5px">${SUBS[sid].name.replace(" Aftermarket","")}: ${ACCESS_LABEL[r]}</span>`).join("")
+     : '<span class="chip chip-warn">No subsidiary</span>'}</td>
+<td>${u.invite==="Accepted"?'<span class="chip chip-ok">Accepted</span>':'<span class="chip chip-warn">Invited</span>'}</td>
+<td class="muted">${u.created}</td><td class="muted">${u.last}</td>
+${can("user_edit")?`<td><button class="btn-ghost btn-sm" onclick="stub('Edit user — per-subsidiary role, add/remove subsidiaries, deactivate')">Manage</button></td>`:""}</tr>`).join("")}
+</table></div>`;}
+
+function setIO(){return `
+<div class="card" style="margin-bottom:16px"><div style="padding:16px 18px 4px"><h3 style="font-size:15px">Imports</h3></div>
+<table><tr><th>Upload</th><th>File</th><th>Subsidiary</th><th>By</th><th>Added</th><th>Duplicates</th><th>Errors</th><th>When</th></tr>
+${UPLOADS.map(u=>`<tr><td><b>${u.id}</b></td><td>${u.file}</td><td>${SUBS[u.sub]?SUBS[u.sub].name.replace(" Aftermarket",""):"—"}</td><td>${PEOPLE[u.by]||u.by}</td>
+<td class="mono">${fmt(u.added)}</td><td class="mono">${u.dupes}</td><td class="mono">${u.errors}</td><td class="muted">${u.when}</td></tr>`).join("")}
+</table></div>
+<div class="card"><div style="padding:16px 18px 4px"><h3 style="font-size:15px">Exports</h3></div>
+<table><tr><th>Export</th><th>Type</th><th>Scope</th><th>By</th><th>When</th><th></th></tr>
+${EXPORTS.map(e=>`<tr><td><b>${e.id}</b></td><td>${e.what}</td><td>${e.scope}</td><td>${PEOPLE[e.by]||e.by}</td><td class="muted">${e.when}</td>
+<td><button class="btn-ghost btn-sm" onclick="toast('Downloaded '+e.id)">↧ Download</button></td></tr>`).join("")}
+</table></div>`;}
+
+function setSubs(){return `
+<div class="card"><div style="padding:16px 18px 4px;display:flex;justify-content:space-between;align-items:center">
+  <div><h3 style="font-size:15px">Subsidiaries</h3><div class="muted">Click a row for details${S.user.orgRole==="org_admin"||myAccess()==="sub_admin"?"":" — your role sees the table read-only"}</div></div>
+  ${can("sub_create")?`<button class="btn btn-p btn-sm" onclick="openModal('createSub')">+ Add subsidiary</button>`:""}</div>
+<table><tr><th>Name</th><th>Function</th><th>Admin</th><th>Region</th><th>Currency</th><th>Members</th><th>Purse</th></tr>
+${Object.values(SUBS).map(s=>`
+<tr style="cursor:pointer" onclick="openSubDetail('${s.id}')">
+<td><b>${s.name}</b></td><td>${s.fn}</td><td>${PEOPLE[s.head]}</td>
+<td>${s.continent}${s.countries.length?" · "+s.countries.length+(s.countries.length>1?" countries":" country"):""}</td>
+<td>${s.currency}</td><td class="mono">${s.members.length}</td><td class="mono">${fmt(BAL.subs[s.id]||0)}</td></tr>`).join("")}
+</table></div>`;}
+function openSubDetail(id){
+  if(!(S.user.orgRole==="org_admin"||(myAccess()==="sub_admin"&&userSubs(S.user).includes(id)))){
+    toast("Subsidiary details are visible to Org Admin and that subsidiary's admin");return;}
+  S.drawer={t:"subdetail",sub:id};render();}
+
+/* ---------------- OPS screens ---------------- */
+function opsCustomers(){return `
+<div class="page-h"><div><h2>Customers</h2><div class="sub">All organizations on RelianceIQ</div></div>
+<button class="btn btn-p" onclick="stub('Create org + org admin — RIQ-side onboarding')">+ New customer</button></div>
+<div class="card"><table><tr><th>Organization</th><th>Plan</th><th>Subsidiaries</th><th>Users</th><th>Credits purchased</th><th>Consumed</th><th>Status</th><th></th></tr>
+${CUSTOMERS.map(c=>`<tr><td><b>${c.org}</b></td><td>${c.plan}</td><td class="mono">${c.subs}</td><td class="mono">${c.users}</td>
+<td class="mono">${fmt(c.credits)}</td><td class="mono">${fmt(c.used)}</td>
+<td><span class="chip ${c.status==="active"?"chip-ok":"chip-mut"}">${c.status}</span></td>
+<td>${c.org==="AGCO Corporation"?`<button class="btn btn-o btn-sm" onclick="impersonate()">Open as customer →</button>`:`<button class="btn-ghost btn-sm" onclick="stub('Customer detail')">Detail</button>`}</td></tr>`).join("")}
+</table></div>`;}
+function impersonate(){S.impersonating=COMPANY.companyName;S.user={...USERS.john,name:"Sara Kim (as AGCO)",id:"sara",orgRole:"org_admin"};S.sub="usa";S.screen="dash";
+  toast("⚠ Impersonation started — logged to the audit trail");render();}
+function opsApprovals(){return `
+<div class="page-h"><div><h2>Pending approvals</h2><div class="sub">Self-signups awaiting review — invited users skip this queue</div></div></div>
+<div class="card"><table><tr><th>Name</th><th>Email</th><th>Organization</th><th>Requested</th><th></th></tr>
+${PENDING.map((u,i)=>`<tr><td><b>${u.name}</b></td><td>${u.email}</td><td>${u.org}</td><td class="muted">${u.when}</td>
+<td><button class="btn btn-p btn-sm" onclick="PENDING.splice(${i},1);toast('${u.name} approved — welcome email sent');render()">Approve</button>
+<button class="btn btn-o btn-sm btn-danger" onclick="PENDING.splice(${i},1);toast('${u.name} rejected');render()">Reject</button></td></tr>`).join("")||'<tr><td colspan="5" class="muted">Queue is empty 🎉</td></tr>'}
+</table></div>`;}
+function opsCleanQ(){return `
+<div class="page-h"><div><h2>Cleaning queue</h2><div class="sub">Rough-Diamond: parts with vendors pending accept/reject, across all customers</div></div>
+<button class="btn btn-o" onclick="stub('Claim next 25 — assigns parts to you (ops pods)')">Claim next 25</button></div>
+<div class="card"><table><tr><th>Customer</th><th>Subsidiary</th><th>Part</th><th>Pending vendors</th><th>From run</th><th></th></tr>
+${CLEANQ.map(c=>`<tr><td><b>${c.org}</b></td><td>${c.sub}</td><td>${c.name}<br><span class="muted mono">${c.part}</span></td>
+<td><span class="chip chip-warn">${c.pending} pending</span></td><td class="mono muted">${c.run}</td>
+<td>${VENDORS[c.part]?`<button class="btn btn-o btn-sm" onclick="S.drawer={t:'vendors',part:'${c.part}'};render()">Clean →</button>`:`<button class="btn-ghost btn-sm" onclick="stub('Vendor review for ${c.part}')">Clean →</button>`}</td></tr>`).join("")}
+</table></div>`;}
+function opsRuns(){return `
+<div class="page-h"><div><h2>Runs monitor</h2><div class="sub">Every run across every customer</div></div></div>
+<div class="card"><table><tr><th>Run</th><th>Customer</th><th>Type</th><th>Progress</th><th>Zero</th><th>Failed</th><th>3rd-party cost</th><th>Status</th></tr>
+${[["RUN-0207","AGCO","Selected","24/24","2","0","$3.84","done"],
+["RUN-0199","Kubota","Monthly refresh","112/112","9","1","$18.11","done"],
+["RUN-0195","AGCO","Bulk cleanse (pilot)","4,890/5,000","214","12","$612.40","run"]].map(r=>`
+<tr><td><b>${r[0]}</b></td><td>${r[1]}</td><td>${r[2]}</td><td class="mono">${r[3]}</td>
+<td class="mono">${r[4]}</td><td class="mono" ${+r[5]?'style="color:var(--red)"':""}>${r[5]}</td><td class="mono">${r[6]}</td>
+<td>${r[7]==="run"?'<span class="chip chip-info">↻ Running</span>':'<span class="chip chip-ok">Completed</span>'}</td></tr>`).join("")}
+</table></div>`;}
+
+/* ---------------- modals ---------------- */
+function openModal(t,arg){if(t==="upload")S.wiz={step:1};S.modal={t,arg};render();}
+function closeModal(){S.modal=null;render();}
+function renderModal(){const m=S.modal;
+  const body=m.t==="createSub"?mCreateSub():m.t==="invite"?mInvite():m.t==="allocSub"?mAllocSub(m.arg)
+    :m.t==="allocMember"?mAllocMember(m.arg):m.t==="upload"?mUpload():m.t==="errfile"?mErrFile()
+    :m.t==="nprefs"?mNotifPrefs():m.t==="addpart"?mAddPart():"";
+  const wide=(m.t==="upload"&&S.wiz&&S.wiz.step>1)||m.t==="errfile";
+  return `<div class="overlay" onclick="if(event.target===this)closeModal()"><div class="modal${wide?" wide":""}">${body}</div></div>`;}
+function mAddPart(){return `
+<h3>Add part</h3><div class="muted">Single part — for bulk use Terminal → Parts Portfolio</div>
+<label class="lbl">Internal part #</label><input class="inp" placeholder="AL-110xxx">
+<label class="lbl">Part name *</label><input class="inp" placeholder="e.g. Hydraulic Gear Pump">
+<label class="lbl">Manufacturer *</label><input class="inp" placeholder="e.g. Casappa">
+<label class="lbl">Manufacturer part # *</label><input class="inp" placeholder="Used for dedup — normalized automatically">
+<div class="foot"><button class="btn btn-o" onclick="closeModal()">Cancel</button>
+<button class="btn btn-p" onclick="closeModal();toast('Part added — created by / owner set to '+S.user.name)">Add part</button></div>`;}
+function mCreateSub(){return `
+<h3>Create subsidiary</h3><div class="muted">An operating unit — region, team, department, whatever fits your org.</div>
+<div class="grid-2">
+<span><label class="lbl">Name *</label><input class="inp" id="cs-name" placeholder="e.g. Europe Aftermarket"></span>
+<span><label class="lbl">Business function / department</label><input class="inp" id="cs-fn" placeholder="e.g. Parts Research"></span>
+<span><label class="lbl">Subsidiary admin / owner *</label>
+<select class="sel" id="cs-head"><option value="">Select user…</option>${Object.values(USERS).filter(u=>u.orgRole!=="riq_ops").map(u=>`<option value="${u.id}">${u.name}</option>`).join("")}</select></span>
+<span><label class="lbl">Industry</label><input class="inp" id="cs-ind" value="${esc(COMPANY.industry)}"></span>
+<span><label class="lbl">City</label><input class="inp" id="cs-city" placeholder="City"></span>
+<span><label class="lbl">State / Postal code</label><input class="inp" id="cs-state" placeholder="State · ZIP"></span>
+<span><label class="lbl">Default currency</label><select class="sel" id="cs-cur"><option>USD</option><option>EUR</option><option>GBP</option><option>JPY</option><option>INR</option></select></span>
+<span><label class="lbl">Default time zone</label><select class="sel" id="cs-tz"><option>${COMPANY.tz}</option><option>America/Chicago (CT)</option><option>Europe/Berlin (CET)</option><option>Asia/Tokyo (JST)</option></select></span>
+</div>
+<label class="lbl">Subsidiary region — continent *</label>
+<select class="sel" id="cs-cont" onchange="csCountries(this.value)">${Object.keys(CONTINENTS).map(c=>`<option>${c}</option>`).join("")}</select>
+<label class="lbl">Countries <span class="muted" style="font-weight:400">— select multiple; none = whole continent</span></label>
+<div id="cs-countries">${CONTINENTS["North America"].map(c=>`<button class="region-chip" onclick="this.classList.toggle('on')">${c}</button>`).join("")}</div>
+<label class="lbl">Description</label><textarea class="txa" id="cs-desc" rows="2" placeholder="What this subsidiary is for"></textarea>
+<label class="lbl">Allocate credits from org pool <span class="muted" style="font-weight:400">(${fmt(BAL.org)} available)</span></label>
+<input class="inp" id="cs-credits" type="number" value="500" style="max-width:200px">
+<label class="lbl">Add users to subsidiary <span class="muted" style="font-weight:400">— optional; invitations are emailed automatically after creation</span></label>
+<input class="inp" id="cs-users" placeholder="emails, comma-separated — e.g. jane@agco.com, raj@agco.com">
+<label class="lbl" style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" class="check" id="cs-share" checked> Members can see each other's work (sharing)</label>
+<div class="foot"><button class="btn btn-o" onclick="closeModal()">Cancel</button>
+<button class="btn btn-p" onclick="createSub()">Create subsidiary</button></div>`;}
+function csCountries(cont){$("cs-countries").innerHTML=CONTINENTS[cont].map(c=>`<button class="region-chip" onclick="this.classList.toggle('on')">${c}</button>`).join("");}
+function createSub(){
+  const name=$("cs-name").value.trim(),head=$("cs-head").value,cont=$("cs-cont").value;
+  const credits=Math.max(0,+$("cs-credits").value||0);
+  if(!name){toast("Name is required");return;}if(!head){toast("A subsidiary admin (owner) is mandatory");return;}
+  if(credits>BAL.org){toast("Only "+fmt(BAL.org)+" unallocated credits available");return;}
+  const countries=[...document.querySelectorAll("#cs-countries .on")].map(b=>b.textContent);
+  const emails=$("cs-users").value.trim();
+  const id="s"+Date.now();
+  SUBS[id]={id,name,fn:$("cs-fn").value||"—",head,industry:$("cs-ind").value,city:$("cs-city").value,state:$("cs-state").value,zip:"",
+    continent:cont,countries,currency:$("cs-cur").value,tz:$("cs-tz").value,sharing:$("cs-share").checked,
+    desc:$("cs-desc").value,members:[head],created:"Just now"};
+  BAL.org-=credits;BAL.subs[id]=credits;USAGE[id]={alloc:credits,used:0};
+  LEDGER.unshift({t:"Allocate",who:S.user.name,detail:"Org → "+name,amt:"−"+fmt(credits),when:"Just now"});
+  AUDIT.unshift(["Just now",S.user.name,"Org Admin","sub.create",name]);
+  closeModal();
+  toast(`<b>${esc(name)}</b> created — ${PEOPLE[head]} is admin, ${fmt(credits)} credits allocated${emails?`, invites sent to ${emails.split(",").length} user(s)`:""}`);}
+function mInvite(){return `
+<h3>Add user</h3><div class="muted">They'll get an email invitation — invited users skip the approval queue.</div>
+<label class="lbl">Email *</label><input class="inp" id="inv-email" placeholder="name@agco.com">
+<label class="lbl">Subsidiary</label><select class="sel">${(S.user.orgRole==="org_admin"?Object.values(SUBS):userSubs(S.user).map(s=>SUBS[s])).map(s=>`<option>${s.name}</option>`).join("")}</select>
+<label class="lbl">Access <span class="muted" style="font-weight:400">— in this subsidiary only; you can add them to other subsidiaries with a different role later</span></label>
+<select class="sel"><option>Standard User</option><option>Read-only</option><option>Sub Admin</option></select>
+${S.user.orgRole==="org_admin"?`<label class="lbl" style="display:flex;align-items:center;gap:8px;cursor:pointer;font-weight:500"><input type="checkbox" class="check"> Also make this user an Org Admin (org-wide)</label>`:""}
+<div class="foot"><button class="btn btn-o" onclick="closeModal()">Cancel</button>
+<button class="btn btn-p" onclick="var e=$('inv-email').value||'user';closeModal();toast('Invitation sent to '+e)">Send invite</button></div>`;}
+function mAllocSub(sid){const s=SUBS[sid];return `
+<h3>Allocate credits → ${esc(s.name)}</h3>
+<div class="muted">From org unallocated pool (${fmt(BAL.org)} available). Drawn from the lot closest to expiry. Cannot be reversed back to the org.</div>
+<label class="lbl">Credits</label><input class="inp" id="al-amt" type="number" value="200">
+<div class="foot"><button class="btn btn-o" onclick="closeModal()">Cancel</button>
+<button class="btn btn-p" onclick="allocSub('${sid}')">Allocate</button></div>`;}
+function allocSub(sid){const amt=+$("al-amt").value||0;
+  if(amt<=0||amt>BAL.org){toast("Enter an amount up to "+fmt(BAL.org));return;}
+  BAL.org-=amt;BAL.subs[sid]+=amt;USAGE[sid].alloc+=amt;
+  LEDGER.unshift({t:"Allocate",who:S.user.name,detail:"Org → "+SUBS[sid].name,amt:"−"+fmt(amt),when:"Just now"});
+  closeModal();toast(`Allocated <b>${fmt(amt)}</b> credits to ${SUBS[sid].name}`);}
+function mAllocMember(m){return `
+<h3>Allocate credits → ${PEOPLE[m]}</h3>
+<div class="muted">From ${SUBS[S.drawer?.sub||S.sub].name} purse (${fmt(BAL.subs[S.drawer?.sub||S.sub])} available).</div>
+<label class="lbl">Credits</label><input class="inp" id="al-amt" type="number" value="50">
+<div class="foot"><button class="btn btn-o" onclick="closeModal()">Cancel</button>
+<button class="btn btn-p" onclick="allocMember('${m}')">Allocate</button></div>`;}
+function allocMember(m){const sid=S.drawer?.sub||S.sub;const amt=+$("al-amt").value||0;
+  if(amt<=0||amt>BAL.subs[sid]){toast("Enter an amount up to "+fmt(BAL.subs[sid]));return;}
+  BAL.subs[sid]-=amt;const k=m+":"+sid;BAL.members[k]=(BAL.members[k]||0)+amt;
+  LEDGER.unshift({t:"Allocate",who:S.user.name,detail:SUBS[sid].name+" purse → "+PEOPLE[m],amt:"−"+fmt(amt),when:"Just now"});
+  pushNotif(m,"credit_alloc",fmt(amt)+" credits allocated to you",S.user.name+" · "+SUBS[sid].name);
+  closeModal();toast(`Allocated <b>${fmt(amt)}</b> credits to ${PEOPLE[m]} — they've been notified`);}
+
+/* ================= PARTS IMPORT WIZARD (Salesforce-style) =================
+   Step 1 Upload → 2 Map columns → 3 Review (dry run) → 4 Result + error file.
+   Mapping auto-matches CSV headers to system fields by regex; anything left
+   unmapped is simply not imported. The dry run is free because the backend
+   stages the file before committing (see API map §5a).                      */
+const IMPORT_FIELDS=[
+ {k:"internal_part_num",  l:"Internal part #",       req:true,  pat:/^(internal|int)?[\s_-]*(part|sku|item)[\s_-]*(no|num|number|#)?$|^sku$/i},
+ {k:"part_name",          l:"Part name",             req:true,  pat:/^(part[\s_-]*name|description|desc|item[\s_-]*name|item)$/i},
+ {k:"manufacturer",       l:"Manufacturer",          req:true,  pat:/^(manufacturer|mfr|mfg|brand|maker|make)$/i},
+ {k:"mfr_part_num",       l:"Manufacturer part #",   req:true,  pat:/^(mfr|mfg|manufacturer)[\s_-]*(part)?[\s_-]*(no|num|number|#)?$|^mpn$|^part[\s_-]*(no|num|number|#)$/i},
+ {k:"product_group",      l:"Product group",         pat:/^(product[\s_-]*group|prod[\s_-]*grp|category|cat|group)$/i},
+ {k:"product_description",l:"Product description",   pat:/^(product[\s_-]*desc|long[\s_-]*desc|details|remarks)$/i},
+ {k:"supplier",           l:"Supplier",              pat:/^(supplier|source)$/i},
+ {k:"supplier_part_num",  l:"Supplier part #",       pat:/^(supplier|vendor)[\s_-]*(part)?[\s_-]*(no|num|number|#)$/i},
+ {k:"unit_of_measure",    l:"Unit of measure",       pat:/^(uom|unit[\s_-]*of[\s_-]*measure|unit)$/i},
+ {k:"oem_list_price",     l:"OEM list price",        pat:/^(list[\s_-]*price|oem[\s_-]*price|price|msrp|unit[\s_-]*price)/i},
+ {k:"annual_sales_volume",l:"Annual sales volume",   pat:/^(annual|yearly)[\s_-]*(sales|qty|quantity|volume|units)|^volume$|^annual[\s_-]*qty$/i},
+];
+const IMPORT_FILES={
+ fresh:{ name:"agco_new_parts_aug.csv", rows:120,
+   cols:[["Internal SKU",["AL-221001","AL-221002","AL-221003"]],["Description",["Hydraulic Pump Seal","Air Filter Element","V-Belt 13x1250"]],
+         ["MFG",["Parker","Donaldson","Optibelt"]],["Part Number",["SK-9921-P","P780522","13X1250"]],
+         ["Prod Grp",["Hydraulics","Filtration","Drive"]],["UOM",["EA","EA","EA"]],["List Price USD",["48.20","31.75","19.40"]]],
+   result:{inserted:120,dupes:0,errors:0} },
+ mixed:{ name:"agco_q3_refresh.csv", rows:250,
+   cols:[["Internal SKU",["AL-110342","AL-110377","AL-231455"]],["Description",["Hydraulic Gear Pump","Cabin Air Filter","Tie Rod End"]],
+         ["MFG",["Casappa","Donaldson","TRW"]],["Part Number",["PLP20.8D0-82E2","P608668","JAR1178"]],
+         ["Prod Grp",["Hydraulics","Filtration","Steering"]],["Annual Qty",["1,240","880","310"]],
+         ["List Price USD",["452.00","28.10","96.55"]],["Buyer Notes",["reorder Q4","",""]],["Legacy Ref",["LGC-0091","LGC-0102","—"]]],
+   result:{inserted:180,dupes:55,errors:15} },
+ bulk:{ name:"agco_full_portfolio_200k.xlsx", rows:200000,
+   cols:[["Internal SKU",["AL-110342","AL-110377","AL-231455"]],["Description",["Hydraulic Gear Pump","Cabin Air Filter","Tie Rod End"]],
+         ["MFG",["Casappa","Donaldson","TRW"]],["Part Number",["PLP20.8D0-82E2","P608668","JAR1178"]],
+         ["Prod Grp",["Hydraulics","Filtration","Steering"]],["UOM",["EA","EA","EA"]],
+         ["Annual Qty",["1,240","880","310"]],["List Price USD",["452.00","28.10","96.55"]],
+         ["Plant Code",["DUL-01","DUL-01","JAX-02"]]],
+   result:{inserted:186420,dupes:11480,errors:2100} },
+};
+/* Rows above this validate synchronously (feels instant); above it the dry run
+   is a background job with progress. Real timings: ~10-20s for 200k rows from
+   CSV, ~15-25s from XLSX when parsed with python-calamine. */
+const SYNC_ROW_LIMIT=5000;
+const ERROR_SAMPLE=[
+ ["AL-110342","Hydraulic Gear Pump","Casappa","PLP20.8D0-82E2","Duplicate — part already exists in this subsidiary (PRT-1001)"],
+ ["AL-110377","Cabin Air Filter","Donaldson","P608668","Duplicate — part already exists in this subsidiary (PRT-1002)"],
+ ["AL-231902","Wheel Hub Assembly","","WH-4471","Missing mandatory field: Manufacturer"],
+ ["","Oil Cooler Line","Gates","OC-2231","Missing mandatory field: Internal part #"],
+ ["AL-231945","Brake Pad Set","Textar","","Missing mandatory field: Manufacturer part #"],
+ ["AL-231960","Coolant Hose","Gates","CH-8890","Invalid number in List Price USD: \"n/a\""],
+];
+/* Full rows for the downloadable error file: EVERY original column, in the
+   user's original order, plus an appended `error` column. bad = index of the
+   cell to highlight so the user sees exactly what to fix.                    */
+const ERROR_FILE_ROWS=[
+ {r:["AL-110342","Hydraulic Gear Pump","Casappa","PLP20.8D0-82E2","Hydraulics","1,240","452.00","reorder Q4","LGC-0091"],bad:3,
+  e:"Duplicate — part already exists in this subsidiary (PRT-1001)"},
+ {r:["AL-110377","Cabin Air Filter","Donaldson","P608668","Filtration","880","28.10","","LGC-0102"],bad:3,
+  e:"Duplicate — part already exists in this subsidiary (PRT-1002)"},
+ {r:["AL-231902","Wheel Hub Assembly","","WH-4471","Chassis","145","210.00","","LGC-0210"],bad:2,
+  e:"Missing mandatory field: Manufacturer"},
+ {r:["","Oil Cooler Line","Gates","OC-2231","Cooling","96","41.30","","LGC-0233"],bad:0,
+  e:"Missing mandatory field: Internal part #"},
+ {r:["AL-231945","Brake Pad Set","Textar","","Braking","320","88.00","","LGC-0240"],bad:3,
+  e:"Missing mandatory field: Manufacturer part #"},
+ {r:["AL-231960","Coolant Hose","Gates","CH-8890","Cooling","210","n/a","","LGC-0251"],bad:6,
+  e:"Invalid number in List Price USD: \"n/a\""},
+ {r:["AL-231977","Idler Pulley","","IP-6620","Drive","410","33.90","","LGC-0262"],bad:2,
+  e:"Missing mandatory field: Manufacturer"},
+ {r:["AL-232001","Hydraulic Filter","Donaldson","P171620","Filtration","","19.95","dup of row 88","LGC-0270"],bad:3,
+  e:"Duplicate row within this file (kept row 88)"},
+];
+const COL_LETTERS="ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+function autoMap(cols){const m={};const used=new Set();
+  cols.forEach(([h])=>{const f=IMPORT_FIELDS.find(f=>!used.has(f.k)&&f.pat.test(h.trim()));
+    if(f){m[h]=f.k;used.add(f.k);}else m[h]=null;});
+  return m;}
+function wizOpen(scn){const f=IMPORT_FILES[scn];
+  S.wiz={step:2,scn,map:autoMap(f.cols),dupPolicy:"skip",pct:0};render();}
+function mUpload(){
+  if(!S.wiz)S.wiz={step:1};
+  const w=S.wiz,f=w.scn?IMPORT_FILES[w.scn]:null;
+  const head=`<h3>Import parts</h3><div class="muted">${SUBS[S.sub].name} · Excel or CSV · duplicates and invalid rows are reported, never silently dropped</div>
+  <div class="wiz-steps">${["Upload file","Map columns","Review","Result"].map((l,i)=>{const n=i+1;
+    return `<span class="wiz-step ${w.step===n?"on":w.step>n?"done":""}"><span class="wiz-num">${w.step>n?"✓":n}</span>${l}</span>`;}).join("")}</div>`;
+
+  if(w.step===1)return head+`
+<div class="upload-zone" onclick="wizOpen('fresh')">
+  <div style="font-size:26px;margin-bottom:8px">↥</div><b>Drop your file here or click to browse</b>
+  <div style="margin-top:5px">.xlsx or .csv · up to 200,000 rows</div></div>
+<div class="card" style="margin-top:14px;padding:14px 16px;background:var(--g-softer)">
+  <b style="font-size:13px">Prototype — pick a sample file to walk through</b>
+  <div style="display:flex;gap:10px;margin-top:10px">
+    <button class="btn btn-o btn-sm" onclick="wizOpen('fresh')">📄 agco_new_parts_aug.csv <span class="muted">— 120 rows, all new</span></button>
+    <button class="btn btn-o btn-sm" onclick="wizOpen('mixed')">📄 agco_q3_refresh.csv <span class="muted">— 250 rows, some existing</span></button>
+    <button class="btn btn-o btn-sm" onclick="wizOpen('bulk')">📄 agco_full_portfolio_200k.xlsx <span class="muted">— AGCO scale</span></button>
+  </div></div>
+<div style="margin-top:12px"><button class="btn-ghost btn-sm" onclick="toast('Template downloaded — riq_parts_template_v3.xlsx')">↧ Download template</button></div>
+<div class="foot"><button class="btn btn-o" onclick="closeModal()">Cancel</button></div>`;
+
+  if(w.step===2){
+    const mapped=Object.values(w.map).filter(Boolean);
+    const missingReq=IMPORT_FIELDS.filter(x=>x.req&&!mapped.includes(x.k));
+    return head+`
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+  <div><b>${f.name}</b> <span class="muted">· ${fmt(f.rows)} rows · ${f.cols.length} columns detected</span></div>
+  <span class="muted">${mapped.length} of ${f.cols.length} columns mapped</span></div>
+${missingReq.length?`<div class="card" style="padding:11px 14px;background:var(--red-bg);border-color:#f0cfcc;margin-bottom:12px">
+  <b style="color:var(--red);font-size:13px">Map these required fields to continue:</b>
+  <span class="muted" style="color:var(--red)"> ${missingReq.map(x=>x.l).join(", ")}</span></div>`:""}
+<div class="card" style="max-height:340px;overflow:auto"><table>
+<tr><th style="width:26%">Column in your file</th><th style="width:30%">Sample values</th><th style="width:32%">Maps to MarketIQ field</th><th>Status</th></tr>
+${f.cols.map(([h,samples],i)=>{const cur=w.map[h];const auto=autoMap(f.cols)[h];return `
+<tr class="map-row">
+  <td><b>${h}</b></td>
+  <td class="samp">${samples.slice(0,3).map(s=>esc(s||"—")).join(" · ")}</td>
+  <td><select class="sel" style="padding:6px 9px;font-size:12.5px" onchange="wizMap('${esc(h)}',this.value)">
+    <option value="">— Do not import —</option>
+    ${IMPORT_FIELDS.map(fl=>`<option value="${fl.k}" ${cur===fl.k?"selected":""}>${fl.l}${fl.req?" *":""}</option>`).join("")}
+  </select></td>
+  <td>${!cur?'<span class="chip chip-mut">Skipped</span>':cur===auto?'<span class="chip chip-info">Auto-matched</span>':'<span class="chip chip-ok">Set by you</span>'}</td>
+</tr>`;}).join("")}
+</table></div>
+<div class="muted" style="margin-top:10px">Columns set to <b>Do not import</b> are ignored — those values won't be written to the part row. Fields marked * are mandatory for a part to be searchable.</div>
+<div class="foot"><button class="btn btn-o" onclick="S.wiz={step:1};render()">← Back</button>
+<button class="btn btn-p" ${missingReq.length?"disabled":""} onclick="wizValidate()">Validate file →</button></div>`;
+  }
+
+  /* 3a — dry run in progress (only for files above the sync threshold) */
+  if(w.step===3&&w.vpct!=null&&w.vpct<100){
+    const done=Math.round(w.vpct/100*f.rows);
+    const phase=w.vpct<45?"Parsing and staging rows":w.vpct<70?"Checking mandatory fields and value types":"Matching against existing parts";
+    return head+`
+<div style="text-align:center;padding:18px 0">
+  <b>Validating ${f.name}</b>
+  <div class="muted" style="margin-top:4px">${phase}… <span class="mono">${fmt(done)} / ${fmt(f.rows)} rows</span></div>
+  <div class="progress" style="margin:20px 0 8px"><i style="width:${w.vpct}%"></i></div>
+  <div class="muted">Nothing is written until you review and confirm. Typical for this size: <b>15–25 seconds</b>.</div>
+  <div class="muted" style="margin-top:12px">You can close this — validation continues and you'll be notified when the review is ready.</div>
+</div>
+<div class="foot"><button class="btn btn-o" onclick="closeModal()">Close, notify me</button></div>`;}
+
+  if(w.step===3){const r=f.result;return head+`
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+  <div><b>${f.name}</b> <span class="muted">· dry run complete — nothing has been written yet</span></div>
+  ${f.rows>SYNC_ROW_LIMIT?`<span class="chip chip-mut">checked in ${(f.rows/12000).toFixed(0)}s</span>`:""}</div>
+<div class="kpis" style="margin-bottom:14px">
+  <div class="card kpi"><div class="l">WILL BE CREATED</div><div class="v" style="color:var(--g-dark)">${fmt(r.inserted)}</div></div>
+  <div class="card kpi"><div class="l">DUPLICATES</div><div class="v" style="color:${r.dupes?"var(--amber)":"var(--ink-3)"}">${fmt(r.dupes)}</div><div class="d">${r.dupes?"already in this subsidiary":"none found"}</div></div>
+  <div class="card kpi"><div class="l">INVALID ROWS</div><div class="v" style="color:${r.errors?"var(--red)":"var(--ink-3)"}">${fmt(r.errors)}</div><div class="d">${r.errors?"missing mandatory fields / bad values":"none found"}</div></div>
+  <div class="card kpi"><div class="l">TOTAL IN FILE</div><div class="v mono">${fmt(f.rows)}</div></div>
+</div>
+<b style="font-size:13.5px">When a part already exists in this subsidiary</b>
+<div style="display:flex;gap:10px;margin:8px 0 4px">
+  <label class="card" style="flex:1;padding:12px 14px;cursor:pointer;border-color:${w.dupPolicy==="skip"?"var(--g)":"var(--border)"}">
+    <span style="display:flex;gap:8px;align-items:center"><input type="radio" name="dp" ${w.dupPolicy==="skip"?"checked":""} onclick="S.wiz.dupPolicy='skip';render()">
+    <b style="font-size:13px">Skip and report</b></span>
+    <span class="muted" style="display:block;margin-left:22px">Existing parts are left untouched and listed in the error file</span></label>
+  <label class="card" style="flex:1;padding:12px 14px;cursor:pointer;border-color:${w.dupPolicy==="update"?"var(--g)":"var(--border)"}">
+    <span style="display:flex;gap:8px;align-items:center"><input type="radio" name="dp" ${w.dupPolicy==="update"?"checked":""} onclick="S.wiz.dupPolicy='update';render()">
+    <b style="font-size:13px">Update existing attributes</b></span>
+    <span class="muted" style="display:block;margin-left:22px">Overwrites mapped fields; search results and vendors are kept</span></label>
+</div>
+${r.errors||r.dupes?`<div style="margin-top:14px"><b style="font-size:13.5px">Preview of rows that won't be created</b>
+<div class="card" style="margin-top:8px;max-height:180px;overflow:auto"><table class="err-tbl">
+<tr><th>Internal SKU</th><th>Description</th><th>MFG</th><th>Part Number</th><th>error</th></tr>
+${ERROR_SAMPLE.slice(0,w.dupPolicy==="update"?4:6).filter(e=>w.dupPolicy==="update"?!e[4].startsWith("Duplicate"):true).map(e=>`
+<tr>${e.slice(0,4).map(c=>`<td>${esc(c||"—")}</td>`).join("")}<td class="err-cell">${esc(e[4])}</td></tr>`).join("")}
+</table></div>
+<div class="muted" style="margin-top:6px">The full file keeps your original columns and adds an <b>error</b> column — fix and re-upload just those rows.</div></div>`:""}
+<div class="foot"><button class="btn btn-o" onclick="S.wiz.step=2;render()">← Back to mapping</button>
+<button class="btn btn-p" onclick="wizSubmit()">Import ${fmt(r.inserted)} parts</button></div>`;
+  }
+
+  if(w.step===4&&w.pct<100)return head+`
+<div style="text-align:center;padding:20px 0">
+  <b>Importing ${f.name}</b>
+  <div class="muted" style="margin-top:4px">Staging rows, checking duplicates, writing parts…</div>
+  <div class="progress" style="margin:20px 0 8px"><i style="width:${w.pct}%"></i></div>
+  <div class="muted mono">${fmt(Math.round(w.pct/100*(w.dupPolicy==="update"?f.result.inserted+f.result.dupes:f.result.inserted)))} / ${fmt(w.dupPolicy==="update"?f.result.inserted+f.result.dupes:f.result.inserted)} parts written</div>
+  <div class="muted" style="margin-top:10px">Fast — the file was already parsed and checked during review; this is the database write.</div>
+  <div class="muted" style="margin-top:8px">You can close this — the import continues and you'll be notified.</div>
+</div>
+<div class="foot"><button class="btn btn-o" onclick="closeModal()">Close, notify me</button></div>`;
+
+  const r=f.result;const created=w.dupPolicy==="update"?r.inserted+r.dupes:r.inserted;
+  return head+`
+<div class="card" style="padding:14px 16px;background:var(--g-softer);margin-bottom:14px">
+  <b>Import complete — ${f.name}</b><div class="muted">${fmt(f.rows)} rows processed · created by ${S.user.name}</div></div>
+<div class="kpis">
+  <div class="card kpi"><div class="l">PARTS ${w.dupPolicy==="update"?"CREATED / UPDATED":"CREATED"}</div><div class="v" style="color:var(--g-dark)">${fmt(created)}</div></div>
+  <div class="card kpi"><div class="l">DUPLICATES</div><div class="v" style="color:${r.dupes?"var(--amber)":"var(--ink-3)"}">${fmt(w.dupPolicy==="update"?0:r.dupes)}</div><div class="d">${w.dupPolicy==="update"?"updated instead":"skipped"}</div></div>
+  <div class="card kpi"><div class="l">NOT CREATED</div><div class="v" style="color:${r.errors?"var(--red)":"var(--ink-3)"}">${fmt(r.errors)}</div><div class="d">in the error file</div></div>
+  <div class="card kpi"><div class="l">READY TO RESEARCH</div><div class="v mono">${fmt(created)}</div></div>
+</div>
+<div class="foot">${r.errors||(r.dupes&&w.dupPolicy==="skip")?`<button class="btn btn-o" onclick="S.modal={t:'errfile'};render()">↧ Download error file (${fmt(r.errors+(w.dupPolicy==="skip"?r.dupes:0))} rows)</button>`:""}
+<button class="btn btn-p" onclick="wizDone()">Done</button></div>`;
+}
+/* ---- error file preview: what the downloaded CSV looks like when opened ---- */
+function mErrFile(){
+  const f=IMPORT_FILES[S.wiz?.scn||"mixed"];
+  const headers=f.cols.map(c=>c[0]);
+  const total=f.result.errors+(S.wiz?.dupPolicy==="update"?0:f.result.dupes);
+  const rows=ERROR_FILE_ROWS.filter(x=>S.wiz?.dupPolicy==="update"?!x.e.startsWith("Duplicate — part already"):true);
+  const fname=f.name.replace(/\.(csv|xlsx)$/,"")+"_errors.csv";
+  return `
+<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px">
+  <div><h3>${fname}</h3>
+  <div class="muted">${fmt(total)} rows that were not imported · your original columns, unchanged, with an <b>error</b> column appended</div></div>
+  <button class="btn-ghost" onclick="S.modal={t:'upload'};render()">✕</button>
+</div>
+<div style="margin-top:16px"><span class="sheet-tab">▦ ${fname}</span></div>
+<div class="sheet">
+  <table>
+    <tr class="colhdr"><th class="rn"></th>${headers.map((_,i)=>`<th>${COL_LETTERS[i]}</th>`).join("")}<th style="background:#f6dedb;color:var(--red)">${COL_LETTERS[headers.length]}</th></tr>
+    <thead><tr><th class="rn">1</th>${headers.map(h=>`<th>${esc(h)}</th>`).join("")}<th style="background:#fbeceb;color:var(--red)">error</th></tr></thead>
+    <tbody>
+    ${rows.map((x,i)=>`<tr>
+      <td class="rn">${i+2}</td>
+      ${x.r.map((c,ci)=>`<td contenteditable class="${ci===x.bad?"cell-bad":""}" title="${ci===x.bad?"This is the value to fix":"Click to edit"}">${esc(c)}</td>`).join("")}
+      <td class="cell-err">${esc(x.e)}</td>
+    </tr>`).join("")}
+    ${total>rows.length?`<tr><td class="rn">…</td><td colspan="${headers.length+1}" class="muted" style="text-align:center">… ${fmt(total-rows.length)} more rows</td></tr>`:""}
+    </tbody>
+  </table>
+</div>
+<div class="card" style="padding:13px 16px;margin-top:14px;background:var(--g-softer)">
+  <b style="font-size:13px">How your team fixes this</b>
+  <div class="muted" style="margin-top:6px;line-height:1.65">
+    1. Open the file — every original column is preserved, so it looks exactly like what you uploaded.<br>
+    2. Fix the highlighted cells (try editing one above). For duplicates, either delete the row or re-import with <b>Update existing attributes</b>.<br>
+    3. Upload this same file again — no need to delete the <b>error</b> column, the wizard maps it to <i>Do not import</i> automatically.<br>
+    4. Only these rows are processed, so nothing is created twice.
+  </div>
+</div>
+<div class="foot">
+  <button class="btn btn-o" onclick="toast('${fname} saved to your downloads')">↧ Save file</button>
+  <button class="btn btn-p" onclick="reuploadFixed()">↥ Re-upload this fixed file</button>
+</div>`;}
+function reuploadFixed(){
+  const scn=S.wiz?.scn||"mixed";
+  const f=IMPORT_FILES[scn];
+  /* simulate the corrected file coming back: original columns + the error column */
+  IMPORT_FILES.fixed={name:f.name.replace(/\.(csv|xlsx)$/,"")+"_errors_fixed.csv",
+    rows:f.result.errors+f.result.dupes,
+    cols:[...f.cols,["error",["Duplicate — part already exists…","Missing mandatory field: Manufacturer","Invalid number in List Price USD"]]],
+    result:{inserted:f.result.errors,dupes:f.result.dupes,errors:0}};
+  S.modal={t:"upload"};wizOpen("fixed");
+  toast("Corrected file loaded — note the <b>error</b> column auto-maps to “Do not import”");}
+
+function wizMap(h,v){S.wiz.map[h]=v||null;render();}
+function wizValidate(){
+  const f=IMPORT_FILES[S.wiz.scn];S.wiz.step=3;
+  if(f.rows<=SYNC_ROW_LIMIT){S.wiz.vpct=null;toast("Dry run — file staged and checked, nothing written yet");render();return;}
+  /* big file: background validation with progress (demo speed is compressed) */
+  S.wiz.vpct=0;render();
+  const iv=setInterval(()=>{ if(!S.wiz||S.wiz.step!==3){clearInterval(iv);return;}
+    S.wiz.vpct+=7+Math.random()*10;
+    if(S.wiz.vpct>=100){S.wiz.vpct=100;clearInterval(iv);
+      pushNotif(S.user.id,"upload_done","Import ready for review",`${f.name} · ${fmt(f.result.inserted)} new · ${fmt(f.result.dupes)} duplicates · ${fmt(f.result.errors)} invalid`);
+      if(S.modal?.t!=="upload")toast("✓ <b>Validation complete</b> — open the import to review");}
+    if(S.modal?.t==="upload")render();else renderBell();},300);}
+function wizSubmit(){S.wiz.step=4;S.wiz.pct=0;render();
+  const f=IMPORT_FILES[S.wiz.scn];
+  const iv=setInterval(()=>{ if(!S.wiz){clearInterval(iv);return;}
+    S.wiz.pct+=9+Math.random()*14;
+    if(S.wiz.pct>=100){S.wiz.pct=100;clearInterval(iv);
+      const r=f.result,created=S.wiz.dupPolicy==="update"?r.inserted+r.dupes:r.inserted;
+      UPLOADS.unshift({id:"UP-00"+(33+UPLOADS.length),file:f.name,by:S.user.id,sub:S.sub,rows:f.rows,
+        added:created,dupes:S.wiz.dupPolicy==="update"?0:r.dupes,errors:r.errors,status:"completed",when:"Just now"});
+      pushNotif(S.user.id,"upload_done","Import processed",`${f.name} · ${fmt(created)} created · ${fmt(r.dupes)} duplicates · ${fmt(r.errors)} errors`);
+      if(S.modal?.t!=="upload")toast("↥ <b>Import complete</b> — see notifications");}
+    if(S.modal?.t==="upload")render();else renderBell();},360);}
+function wizDone(){const f=IMPORT_FILES[S.wiz.scn],r=f.result;
+  const created=S.wiz.dupPolicy==="update"?r.inserted+r.dupes:r.inserted;
+  S.wiz=null;closeModal();
+  toast(`<b>${fmt(created)} parts</b> added to ${SUBS[S.sub].name}${AUTOSEARCH.onUpload?" · Auto Search queued them for research":""}`);}
+
+/* ---------------- drawers ---------------- */
+function renderDrawer(){
+  if(S.drawer.t==="subdetail")return subDetailDrawer(S.drawer.sub);
+  const pt=PARTS.find(x=>x.id===S.drawer.part)||{id:S.drawer.part,name:S.drawer.part,mfr:"—",mfrNum:"—",createdBy:null,modBy:null,resBy:null};
+  const vs=VENDORS[pt.id]||[]; const ce=can("part_edit");
+  return `
+<div class="overlay" style="justify-content:flex-end;background:rgba(20,35,30,.3)" onclick="if(event.target===this){S.drawer=null;render()}"></div>
+<div class="drawer">
+  <div class="d-head">
+    <div><b style="font-size:16px">${pt.name}</b>
+      <div class="muted" style="margin-top:3px">${pt.mfr} · <span class="mono">${pt.mfrNum}</span>${S.sub?" · "+SUBS[S.sub].continent:""}</div>
+      <div style="margin-top:5px">${metaLine(pt)}</div></div>
+    <button class="btn-ghost" onclick="S.drawer=null;render()">✕</button>
+  </div>
+  <div class="d-body">
+    <div style="display:flex;gap:9px;margin-bottom:16px">
+      ${ce?`<button class="btn btn-o btn-sm" onclick="stub('Add vendor — manual form: name, URL, price, lead time')">+ Add vendor</button>`:""}
+      ${can("research")?`<button class="btn btn-o btn-sm" onclick="toast('Re-run · 0.25 credits per vendor')">↻ Re-run all</button>`:""}
+      <div style="flex:1"></div><span class="muted" style="align-self:center">${vs.length} vendors</span>
+    </div>
+    ${vs.length?vs.map((v,i)=>`
+    <div class="vendor-row">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px">
+        <div><b>${v.name}</b>
+          ${v.conf<0.7?'<span class="chip chip-warn" title="AI part-match confidence low">AI ⚠ '+Math.round(v.conf*100)+'%</span>':'<span class="chip chip-mut">AI '+Math.round(v.conf*100)+'%</span>'}
+          ${v.status==="accepted"?'<span class="chip chip-ok">Accepted</span>':v.status==="rejected"?'<span class="chip chip-bad">Rejected</span>':'<span class="chip chip-info">Pending review</span>'}
+        </div>
+        <a class="muted" href="#" onclick="event.preventDefault();toast('Opens vendor product page')">visit ↗</a>
+      </div>
+      <div style="display:flex;gap:22px;margin-top:9px;font-size:13px">
+        <span><span class="muted">Price</span><br><b class="mono">${v.price}</b></span>
+        <span><span class="muted">Lead time</span><br><b>${v.lead}</b></span>
+        <span><span class="muted">Availability</span><br><b>${v.stock}</b></span>
+        <span><span class="muted">Source</span><br><b>${v.source}</b></span>
+        <span style="flex:1"></span>
+        ${ce?(v.status==="pending"?`
+        <span style="display:flex;gap:7px;align-self:center">
+          <button class="btn btn-p btn-sm" onclick="setVendor('${pt.id}',${i},'accepted')">Accept</button>
+          <button class="btn btn-o btn-sm btn-danger" onclick="setVendor('${pt.id}',${i},'rejected')">Reject</button>
+        </span>`:`<button class="btn-ghost btn-sm" style="align-self:center" onclick="setVendor('${pt.id}',${i},'pending')">Undo</button>`)
+        :'<span class="chip chip-mut" style="align-self:center">Read-only</span>'}
+      </div>
+    </div>`).join(""):`<div class="empty">No vendors yet — run a search for this part.</div>`}
+  </div>
+</div>`;}
+function setVendor(pid,i,st){VENDORS[pid][i].status=st;
+  const pt=PARTS.find(x=>x.id===pid);
+  if(pt){pt.modBy=S.user.id;pt.accepted=(VENDORS[pid].filter(v=>v.status==="accepted")).length;}
+  if(st==="accepted")toast(`<b>${VENDORS[pid][i].name}</b> accepted · last modified by ${S.user.name}`);
+  render();}
+function subDetailDrawer(id){const s=SUBS[id];const u=USAGE[id]||{alloc:0,used:0};const admin=canSub("sub_edit",id);return `
+<div class="overlay" style="justify-content:flex-end;background:rgba(20,35,30,.3)" onclick="if(event.target===this){S.drawer=null;render()}"></div>
+<div class="drawer">
+  <div class="d-head">
+    <div><b style="font-size:16px">${s.name}</b><div class="muted" style="margin-top:3px">${s.fn} · created ${s.created}</div></div>
+    <button class="btn-ghost" onclick="S.drawer=null;render()">✕</button>
+  </div>
+  <div class="d-body">
+    <div class="rowline"><span class="muted">Subsidiary admin / owner</span><b>${PEOPLE[s.head]}</b></div>
+    <div class="rowline"><span class="muted">Industry</span><b>${esc(s.industry||"—")}</b></div>
+    <div class="rowline"><span class="muted">Address</span><b>${esc([s.city,s.state,s.zip].filter(x=>x&&x!=="—").join(", ")||"—")}</b></div>
+    <div class="rowline"><span class="muted">Region</span><b>${s.continent}${s.countries.length?" · "+s.countries.join(", "):" (whole continent)"}</b></div>
+    <div class="rowline"><span class="muted">Default currency / time zone</span><b>${s.currency} · ${s.tz}</b></div>
+    <div class="rowline"><span class="muted">Work sharing</span><b>${s.sharing?"On":"Off"}</b></div>
+    <div class="rowline"><span class="muted">Description</span><b style="text-align:right;max-width:280px">${esc(s.desc||"—")}</b></div>
+    <div class="rowline"><span class="muted">Credits — allocated / spent / purse</span><b class="mono">${fmt(u.alloc)} / ${fmt(u.used)} / ${fmt(BAL.subs[id]||0)}</b></div>
+    <div style="display:flex;gap:8px;margin:14px 0 18px">
+      ${admin?`<button class="btn btn-o btn-sm" onclick="stub('Edit subsidiary — same wizard, prefilled; changes audit-logged')">Edit</button>`:""}
+      ${S.user.orgRole==="org_admin"?`<button class="btn btn-o btn-sm" onclick="S.drawer=null;openModal('allocSub','${id}')">Allocate credits</button>`:""}
+      ${admin&&can("user_add")?`<button class="btn btn-o btn-sm" onclick="S.drawer=null;openModal('invite')">+ Add user</button>`:""}
+    </div>
+    <h3 style="font-size:14px;margin-bottom:8px">Members (${s.members.length})</h3>
+    ${s.members.map(m=>{const bal=BAL.members[m+":"+id]??0;return `
+    <div class="vendor-row" style="display:flex;align-items:center;gap:10px">
+      <span class="avatar">${av(PEOPLE[m]||m)}</span>
+      <span style="flex:1"><b>${PEOPLE[m]||m}</b>${m===s.head?' <span class="chip chip-info">Admin</span>':""}${USERS[m]?.invite==="Invited"?' <span class="chip chip-warn">Invited</span>':""}<br>
+      <span class="muted">${ACCESS_LABEL[(USERS[m]?.subRoles||{})[id]]||"Standard User"} · ${fmt(bal)} credits available</span></span>
+      ${admin?`<button class="btn btn-o btn-sm" onclick="openModal('allocMember','${m}')">Allocate</button>
+      <button class="btn-ghost btn-sm btn-danger" onclick="recallIn('${m}','${id}')">Recall</button>`:""}
+    </div>`;}).join("")}
+  </div>
+</div>`;}
+function recallIn(m,sid){const k=m+":"+sid;const b=BAL.members[k]||0;
+  if(!b){toast("Nothing to recall — "+PEOPLE[m]+" has 0 available credits");return;}
+  BAL.members[k]=0;BAL.subs[sid]+=b;
+  LEDGER.unshift({t:"Recall",who:S.user.name,detail:PEOPLE[m]+" → "+SUBS[sid].name+" purse",amt:"+"+fmt(b),when:"Just now"});
+  toast(`Recalled <b>${fmt(b)}</b> credits from ${PEOPLE[m]}`);render();}
+
+/* ---------------- boot ---------------- */
+render();
+</script>
+</body>
+</html>
